@@ -11,4 +11,5 @@ spring:
     password: mysecretpassword
 
 springdoc:
-  swagger-ui: /openapi.yaml
+  swagger-ui:
+    url: /openapi.yaml
