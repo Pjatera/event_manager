@@ -1,4 +1,4 @@
-package ru.javacourse.eventmanagement.utill;
+package ru.javacourse.eventmanagement.exeption;
 
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 
 @Slf4j
 @RestControllerAdvice
@@ -20,6 +19,13 @@ public final class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(new CustomErrorMessage("Некорректный запрос", ex.getMessage(), LocalDateTime.now()));
+    }
+    @ExceptionHandler(NotFoundLocation.class)
+    public ResponseEntity<CustomErrorMessage> notFoundPetException(NotFoundLocation ex) {
+        log.error(ex.getMessage(),ex);
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(new CustomErrorMessage("Сущность не найдена", ex.getMessage(), LocalDateTime.now()));
     }
 
 }
