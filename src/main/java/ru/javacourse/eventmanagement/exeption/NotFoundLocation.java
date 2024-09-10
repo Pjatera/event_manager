@@ -1,6 +1,8 @@
 package ru.javacourse.eventmanagement.exeption;
 
-public class NotFoundLocation extends RuntimeException {
+import jakarta.persistence.EntityNotFoundException;
+
+public class NotFoundLocation extends EntityNotFoundException {
     public NotFoundLocation(String message) {
         super(message);
     }

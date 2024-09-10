@@ -13,19 +13,28 @@ import java.time.LocalDateTime;
 @Slf4j
 @RestControllerAdvice
 public final class GlobalExceptionHandler {
-    @ExceptionHandler({MethodArgumentTypeMismatchException.class, IllegalArgumentException.class, NullPointerException.class, ConstraintViolationException.class})
+    @ExceptionHandler({MethodArgumentTypeMismatchException.class, IllegalArgumentException.class, ConstraintViolationException.class})
     public ResponseEntity<CustomErrorMessage> mismatchException(Exception ex) {
         log.error(ex.getMessage(), ex);
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(new CustomErrorMessage("Некорректный запрос", ex.getMessage(), LocalDateTime.now()));
     }
+
     @ExceptionHandler(NotFoundLocation.class)
     public ResponseEntity<CustomErrorMessage> notFoundPetException(NotFoundLocation ex) {
-        log.error(ex.getMessage(),ex);
+        log.error(ex.getMessage(), ex);
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(new CustomErrorMessage("Сущность не найдена", ex.getMessage(), LocalDateTime.now()));
+    }
+
+    @ExceptionHandler({Exception.class})
+    public ResponseEntity<CustomErrorMessage> exception(Exception ex) {
+        log.error(ex.getMessage(), ex);
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new CustomErrorMessage("Внутренняя ошибка сервера", ex.getMessage(), LocalDateTime.now()));
     }
 
 }

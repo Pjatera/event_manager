@@ -1,15 +1,13 @@
 package ru.javacourse.eventmanagement.locations.model;
 
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Null;
+import jakarta.validation.constraints.*;
 import ru.javacourse.eventmanagement.utill.Marker;
 
-public record EventLocation(
-        @Null(message = "For a new EventLocation, the ID must be empty")
+public record Location(
+
+        @Null(groups = Marker.OnCreate.class,message = "For a new EventLocation, the ID must be empty")
         Integer id,
-        @NotBlank(message = "name not be empty")
+        @NotBlank(groups = Marker.OnCreate.class,message = "name not be empty")
         String name,
         @NotBlank(message = "address not be empty")
         String address,

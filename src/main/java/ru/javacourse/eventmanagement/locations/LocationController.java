@@ -4,58 +4,63 @@ package ru.javacourse.eventmanagement.locations;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.javacourse.eventmanagement.locations.model.EventLocation;
-import ru.javacourse.eventmanagement.locations.model.EventLocationDto;
-import ru.javacourse.eventmanagement.locations.model.EventLocationMapper;
-import ru.javacourse.eventmanagement.utill.Marker;
+import ru.javacourse.eventmanagement.locations.model.Location;
+import ru.javacourse.eventmanagement.locations.model.LocationDto;
+import ru.javacourse.eventmanagement.locations.model.LocationMapper;
 
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@Validated
+@Slf4j
 @RequestMapping("/locations")
 public class LocationController {
 
     private final LocationService locationService;
-    private final EventLocationMapper eventLocationMapper;
+    private final LocationMapper locationMapper;
 
     @GetMapping
-    public ResponseEntity<List<EventLocationDto>> getLocations() {
-        var eventLocationDtoList = locationService.findAll().stream().map(eventLocationMapper::mapToDto).toList();
-        return ResponseEntity.status(HttpStatus.OK).body(eventLocationDtoList);
+    public ResponseEntity<List<LocationDto>> getLocations() {
+        log.info("Get all locations");
+        var locationDtoList = locationService.findAll().stream().map(locationMapper::mapToDto).toList();
+        return ResponseEntity.status(HttpStatus.OK).body(locationDtoList);
     }
 
 
     @PostMapping
-    public ResponseEntity<EventLocationDto> createLocation(@RequestBody @Valid EventLocationDto eventLocationDto) {
-        var newLocation = locationService.createNewLocation(eventLocationMapper.mapFromDto(eventLocationDto));
-        return ResponseEntity.status(HttpStatus.CREATED).body(eventLocationMapper.mapToDto(newLocation));
+    public ResponseEntity<LocationDto> createLocation(@RequestBody  LocationDto locationDto) {
+        var newLocation = locationService.createNewLocation(locationMapper.mapFromDto(locationDto));
+        log.info("Create a new location{}", newLocation);
+        return ResponseEntity.status(HttpStatus.CREATED).body(locationMapper.mapToDto(newLocation));
     }
 
     @DeleteMapping("/{locationId}")
-    public ResponseEntity<EventLocationDto> deleteLocation(@PathVariable @PositiveOrZero(message = "ID must be positive or zero") Integer locationId) {
-        var eventLocation = locationService.deleteLocation(locationId);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(eventLocationMapper.mapToDto(eventLocation));
+    public ResponseEntity<LocationDto> deleteLocation(@PathVariable Integer locationId) {
+        var location = locationService.deleteLocation(locationId);
+        log.info("Delete a location {}", location);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(locationMapper.mapToDto(location));
     }
 
     @GetMapping("/{locationId}")
-    public ResponseEntity<EventLocationDto> getLocationById(@PathVariable @PositiveOrZero(message = "ID must be positive or zero") Integer locationId) {
+    public ResponseEntity<LocationDto> getLocationById(@PathVariable Integer locationId) {
         var locationByID = locationService.getLocationByID(locationId);
-        return ResponseEntity.status(HttpStatus.OK).body(eventLocationMapper.mapToDto(locationByID));
+        log.info("Get a location {}", locationByID);
+        return ResponseEntity.status(HttpStatus.OK).body(locationMapper.mapToDto(locationByID));
     }
 
 
     @PutMapping("/{locationId}")
-    public ResponseEntity<EventLocationDto> updateLocationByID(@PathVariable @PositiveOrZero(message = "ID must be positive or zero") Integer locationId
-            ,@RequestBody @Valid EventLocationDto eventLocationDto) {
-        var eventLocation = eventLocationMapper.mapFromDto(eventLocationDto);
-      EventLocation eventLocationUpdate = locationService.updateById(locationId,eventLocation);
-       return ResponseEntity.status(HttpStatus.OK).body(eventLocationMapper.mapToDto(eventLocationUpdate));
+    public ResponseEntity<LocationDto> updateLocationByID(@PathVariable  Integer locationId
+            , @RequestBody LocationDto locationDto) {
+        var eventLocation = locationMapper.mapFromDto(locationDto);
+        Location locationUpdate = locationService.updateById(locationId,eventLocation);
+        log.info("Update a location {}", locationUpdate);
+        return ResponseEntity.status(HttpStatus.OK).body(locationMapper.mapToDto(locationUpdate));
 
 
     }

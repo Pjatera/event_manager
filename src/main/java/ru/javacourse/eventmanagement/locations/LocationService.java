@@ -1,68 +1,68 @@
 package ru.javacourse.eventmanagement.locations;
 
-
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
-import ru.javacourse.eventmanagement.locations.model.EventLocation;
-import ru.javacourse.eventmanagement.locations.model.EventLocationEntity;
-import ru.javacourse.eventmanagement.locations.model.EventLocationMapper;
+import ru.javacourse.eventmanagement.locations.model.Location;
+import ru.javacourse.eventmanagement.locations.model.LocationEntity;
+import ru.javacourse.eventmanagement.locations.model.LocationMapper;
 import ru.javacourse.eventmanagement.utill.Marker;
 
 import java.util.List;
 
 @Service
-@Transactional
+@Transactional(readOnly = true)
 @RequiredArgsConstructor
 @Validated
 public class LocationService {
 
     private final LocationRepository locationRepository;
-    private final EventLocationMapper eventLocationMapper;
+    private final LocationMapper locationMapper;
 
-    public List<EventLocation> findAll() {
+    public List<Location> findAll() {
         return locationRepository.findAll()
                 .stream()
-                .map(eventLocationMapper::mapFromEntity)
+                .map(locationMapper::mapFromEntity)
                 .toList();
     }
 
     @Validated({Marker.OnCreate.class})
-    public EventLocation createNewLocation(@Valid EventLocation location) {
-        var eventLocationEntity = eventLocationMapper.mapToEntity(location);
-        eventLocationEntity = locationRepository.save(eventLocationEntity);
-        return eventLocationMapper.mapFromEntity(eventLocationEntity);
+    @Transactional
+    public Location createNewLocation(@Valid Location location) {
+        var locationEntity = locationMapper.mapToEntity(location);
+        locationEntity = locationRepository.save(locationEntity);
+        return locationMapper.mapFromEntity(locationEntity);
     }
 
-
-    public EventLocation deleteLocation(@PositiveOrZero(message = "ID must be positive or zero") Integer locationId) {
-        var eventLocationEntity = getEventLocationEntityById(locationId);
+    @Transactional
+    public Location deleteLocation(@PositiveOrZero(message = "ID must be positive or zero") Integer locationId) {
+        var locationEntity = getLocationEntityById(locationId);
         locationRepository.deleteById(locationId);
-        return eventLocationMapper.mapFromEntity(eventLocationEntity);
+        return locationMapper.mapFromEntity(locationEntity);
     }
 
-    public EventLocation getLocationByID(@PositiveOrZero(message = "ID must be positive or zero") Integer locationId) {
-        return eventLocationMapper.mapFromEntity(getEventLocationEntityById(locationId));
+    public Location getLocationByID(@PositiveOrZero(message = "ID must be positive or zero") Integer locationId) {
+        return locationMapper.mapFromEntity(getLocationEntityById(locationId));
     }
 
-    private EventLocationEntity getEventLocationEntityById(Integer locationId) {
+    private LocationEntity getLocationEntityById(Integer locationId) {
         return locationRepository.findById(locationId)
                 .orElseThrow(() -> new IllegalArgumentException("Location with ID %d not found".formatted(locationId)));
     }
 
-
-    public EventLocation updateById(@PositiveOrZero(message = "ID must be positive or zero") Integer locationId, EventLocation eventLocation) {
+    @Transactional
+    public Location updateById(@PositiveOrZero(message = "ID must be positive or zero") Integer locationId, @Valid Location location) {
         var locationByIdOld = getLocationByID(locationId);
-        isChangingCapacityCorrect(eventLocation, locationByIdOld);
-        locationRepository.save(eventLocationMapper.mapToEntity(eventLocation));
+        isChangingCapacityCorrect(location, locationByIdOld);
+        locationRepository.save(locationMapper.mapToEntity(location));
         return locationByIdOld;
     }
 
-    private static void isChangingCapacityCorrect(EventLocation eventLocationUpdate, EventLocation locationByIdOld) {
-        if (locationByIdOld.capacity() < eventLocationUpdate.capacity()) {
+    private  void isChangingCapacityCorrect(Location locationUpdate, Location locationByIdOld) {
+        if (locationByIdOld.capacity() < locationUpdate.capacity()) {
             throw new IllegalArgumentException("The location with the ID %d is too small, it cannot be less than %d".formatted(locationByIdOld.id(), locationByIdOld.capacity()));
         }
     }
