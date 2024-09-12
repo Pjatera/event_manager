@@ -1,24 +1,18 @@
 package ru.javacourse.eventmanagement.locations;
 
 
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.javacourse.eventmanagement.locations.model.Location;
-import ru.javacourse.eventmanagement.locations.model.LocationDto;
-import ru.javacourse.eventmanagement.locations.model.LocationMapper;
 
 import java.util.List;
 
 @RestController
+@RequestMapping("/locations")
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping("/locations")
 public class LocationController {
 
     private final LocationService locationService;
@@ -61,7 +55,7 @@ public class LocationController {
         Location locationUpdate = locationService.updateById(locationId,eventLocation);
         log.info("Update a location {}", locationUpdate);
         return ResponseEntity.status(HttpStatus.OK).body(locationMapper.mapToDto(locationUpdate));
-
-
     }
+
 }
+

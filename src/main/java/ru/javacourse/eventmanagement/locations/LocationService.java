@@ -6,10 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
-import ru.javacourse.eventmanagement.locations.model.Location;
-import ru.javacourse.eventmanagement.locations.model.LocationEntity;
-import ru.javacourse.eventmanagement.locations.model.LocationMapper;
-import ru.javacourse.eventmanagement.utill.Marker;
+import ru.javacourse.eventmanagement.exeptions.NotFoundLocation;
 
 import java.util.List;
 
@@ -29,7 +26,6 @@ public class LocationService {
                 .toList();
     }
 
-    @Validated({Marker.OnCreate.class})
     @Transactional
     public Location createNewLocation(@Valid Location location) {
         var locationEntity = locationMapper.mapToEntity(location);
@@ -50,20 +46,25 @@ public class LocationService {
 
     private LocationEntity getLocationEntityById(Integer locationId) {
         return locationRepository.findById(locationId)
-                .orElseThrow(() -> new IllegalArgumentException("Location with ID %d not found".formatted(locationId)));
+                .orElseThrow(() -> new NotFoundLocation("Location with ID %d not found".formatted(locationId)));
     }
 
     @Transactional
     public Location updateById(@PositiveOrZero(message = "ID must be positive or zero") Integer locationId, @Valid Location location) {
-        var locationByIdOld = getLocationByID(locationId);
-        isChangingCapacityCorrect(location, locationByIdOld);
-        locationRepository.save(locationMapper.mapToEntity(location));
-        return locationByIdOld;
+        var locationEntity = locationRepository.findById(locationId)
+                .orElseThrow(() -> new NotFoundLocation("Location with ID %d not found".formatted(locationId)));
+        isChangingCapacityCorrect(location, locationEntity);
+        locationEntity.setName(location.name());
+        locationEntity.setAddress(location.address());
+        locationEntity.setCapacity(location.capacity());
+        locationEntity.setDescription(location.description());
+        var updateLocation = locationRepository.save(locationEntity);
+        return locationMapper.mapFromEntity(updateLocation);
     }
 
-    private  void isChangingCapacityCorrect(Location locationUpdate, Location locationByIdOld) {
-        if (locationByIdOld.capacity() < locationUpdate.capacity()) {
-            throw new IllegalArgumentException("The location with the ID %d is too small, it cannot be less than %d".formatted(locationByIdOld.id(), locationByIdOld.capacity()));
+    private void isChangingCapacityCorrect(Location locationUpdate, LocationEntity locationByIdOld) {
+        if (locationByIdOld.getCapacity() > locationUpdate.capacity()) {
+            throw new IllegalArgumentException("The location with the ID %d is too small, it cannot be less than %d".formatted(locationByIdOld.getId(), locationByIdOld.getCapacity()));
         }
     }
 }

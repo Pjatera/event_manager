@@ -1,4 +1,4 @@
-package ru.javacourse.eventmanagement.exeption;
+package ru.javacourse.eventmanagement.exeptions;
 
 import java.time.LocalDateTime;
 

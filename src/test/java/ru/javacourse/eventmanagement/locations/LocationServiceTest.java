@@ -7,16 +7,17 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestConstructor;
-import ru.javacourse.eventmanagement.locations.model.Location;
-import ru.javacourse.eventmanagement.locations.model.LocationEntity;
+import ru.javacourse.eventmanagement.exeptions.NotFoundLocation;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doReturn;
 
 @SpringBootTest
 @RequiredArgsConstructor
@@ -26,6 +27,7 @@ class LocationServiceTest {
     private LocationRepository locationRepository;
     private final LocationService locationService;
     private final List<LocationEntity> eventLocationEntities = new ArrayList<>();
+
 
     @BeforeEach
     void setUp() {
@@ -85,9 +87,17 @@ class LocationServiceTest {
                 "456 Ocean Drive, Seaside Town",
                 50,
                 "A bright and airy conference room with a stunning ocean view, ideal for medium-sized meetings.")));
+        assertThrows(ConstraintViolationException.class, () -> locationService.createNewLocation(new Location(null, "Sunny Conference",
+                "",
+                50,
+                "A bright and airy conference room with a stunning ocean view, ideal for medium-sized meetings.")));
         assertThrows(ConstraintViolationException.class, () -> locationService.createNewLocation(new Location(null, "",
                 "456 Ocean Drive, Seaside Town",
                 50,
+                "A bright and airy conference room with a stunning ocean view, ideal for medium-sized meetings.")));
+        assertThrows(ConstraintViolationException.class, () -> locationService.createNewLocation(new Location(null, "Sunny Conference Room",
+                "456 Ocean Drive, Seaside Town",
+                4,
                 "A bright and airy conference room with a stunning ocean view, ideal for medium-sized meetings.")));
 
         verify(locationRepository, times(0)).save(any(LocationEntity.class));
@@ -96,15 +106,66 @@ class LocationServiceTest {
 
     @Test
     void deleteLocation_successfully() {
-
-
+        int locationId = 42;
+        var sunnyConferenceRoom = eventLocationEntities.getFirst();
+        doReturn(Optional.of(sunnyConferenceRoom)).when(locationRepository).findById(locationId);
+        doNothing().when(locationRepository).deleteById(locationId);
+        var location = locationService.deleteLocation(locationId);
+        assertThat(location).isNotNull();
+        assertThat(location.id()).isEqualTo(locationId);
+        verify(locationRepository, times(1)).deleteById(locationId);
+        verify(locationRepository, times(1)).findById(locationId);
     }
+
 
     @Test
     void getLocationByID() {
+        var locationEntity = eventLocationEntities.getFirst();
+        var locationId = locationEntity.getId();
+        doReturn(Optional.of(locationEntity)).when(locationRepository).findById(locationId);
+        var location = locationService.getLocationByID(locationId);
+        assertThat(location).isNotNull();
+        assertThat(location.id()).isEqualTo(locationId);
+        verify(locationRepository, times(1)).findById(locationId);
+    }
+
+    @Test
+    void getLocationByID_shouldThrowException() {
+        doReturn(Optional.ofNullable(null)).when(locationRepository).findById(anyInt());
+        assertThrows(NotFoundLocation.class, () -> locationService.getLocationByID(anyInt()));
+        verify(locationRepository, times(1)).findById(anyInt());
     }
 
     @Test
     void updateById() {
+        var locationEntity = eventLocationEntities.getFirst();
+        var locationId = locationEntity.getId();
+        var locationUpdate =new Location(null,"UpdateName",
+                "г. СПб, Пятилеток 1",
+                12300,
+                "Спортивно-концертный комплекс в Санкт-Петербурге");
+        doReturn(Optional.of(locationEntity)).when(locationRepository).findById(locationId);
+        doReturn(locationEntity).when(locationRepository).save(any(LocationEntity.class));
+        var location = locationService.updateById(locationId, locationUpdate);
+        assertThat(location).isNotNull();
+        assertThat(location.id()).isEqualTo(locationId);
+        verify(locationRepository, times(1)).findById(locationId);
+        verify(locationRepository, times(1)).save(any(LocationEntity.class));
     }
+    @Test
+    void updateById_shouldThrowException() {
+        var locationEntity = eventLocationEntities.getFirst();
+        var locationId = locationEntity.getId();
+
+        var locationUpdate =new Location(null,"UpdateName",
+                "г. СПб, Пятилеток 1",
+                100,
+                "Спортивно-концертный комплекс в Санкт-Петербурге");
+        doReturn(Optional.of(locationEntity)).when(locationRepository).findById(locationId);
+        doReturn(locationEntity).when(locationRepository).save(any(LocationEntity.class));
+        assertThrows(IllegalArgumentException.class, () -> locationService.updateById(locationId, locationUpdate));
+        verify(locationRepository, times(1)).findById(locationId);
+        verify(locationRepository, times(0)).save(any(LocationEntity.class));
+    }
+
 }

@@ -1,4 +1,4 @@
-package ru.javacourse.eventmanagement.locations.model;
+package ru.javacourse.eventmanagement.locations;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
