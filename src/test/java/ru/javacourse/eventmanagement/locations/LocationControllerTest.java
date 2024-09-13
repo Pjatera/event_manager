@@ -1,5 +1,6 @@
 package ru.javacourse.eventmanagement.locations;
 
+import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,7 +60,7 @@ class LocationControllerTest {
         this.firstEntity = icePalace;
         this.locationCheck = locationMapper.mapFromEntity(icePalace);
         this.locationDtoCheck = locationMapper.mapToDto(locationCheck);
-
+        objectMapper.configure(JsonGenerator.Feature.ESCAPE_NON_ASCII, true);
     }
 
 

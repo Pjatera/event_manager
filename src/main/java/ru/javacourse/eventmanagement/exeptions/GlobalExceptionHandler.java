@@ -11,10 +11,18 @@ import java.time.LocalDateTime;
 
 @Slf4j
 @RestControllerAdvice
-public class GlobalExceptionHandler {
+public class GlobalExceptionHandler  {
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<CustomErrorMessage> exception(Exception ex) {
+        log.error(ex.getMessage(), ex);
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new CustomErrorMessage("Внутренняя ошибка сервера", ex.getMessage(), LocalDateTime.now()));
+    }
 
     @ExceptionHandler(NotFoundLocation.class)
-    public ResponseEntity<CustomErrorMessage> notFoundPetException(NotFoundLocation ex) {
+    public ResponseEntity<CustomErrorMessage> notFoundException(NotFoundLocation ex) {
         log.error(ex.getMessage(), ex);
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
@@ -27,14 +35,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(new CustomErrorMessage("Некорректный запрос", ex.getMessage(), LocalDateTime.now()));
-    }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<CustomErrorMessage> exception(Exception ex) {
-        log.error(ex.getMessage(), ex);
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new CustomErrorMessage("Внутренняя ошибка сервера", ex.getMessage(), LocalDateTime.now()));
     }
 
 }

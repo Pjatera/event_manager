@@ -3,7 +3,7 @@ spring:
     name: event-management
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
       show-sql: true
   datasource:
     url: jdbc:postgresql://localhost:5435/postgres
