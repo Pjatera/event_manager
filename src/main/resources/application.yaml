@@ -13,3 +13,9 @@ spring:
 springdoc:
   swagger-ui:
     url: /openapi.yaml
+server:
+  port: 8080
+  servlet:
+    context-path: /
+
+

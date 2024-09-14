@@ -1,10 +1,11 @@
 package ru.javacourse.eventmanagement.locations;
 
 import org.springframework.stereotype.Component;
+import ru.javacourse.eventmanagement.utill.Mapper;
 
 @Component
-public class LocationMapper {
-
+public class LocationMapper implements Mapper<LocationDto, Location, LocationEntity> {
+    @Override
     public LocationDto mapToDto(Location location) {
         return new LocationDto(
                 location.id(),
@@ -15,6 +16,7 @@ public class LocationMapper {
         );
     }
 
+    @Override
     public Location mapFromDto(LocationDto locationDto) {
         return new Location(
                 locationDto.id(),
@@ -25,6 +27,7 @@ public class LocationMapper {
         );
     }
 
+    @Override
     public Location mapFromEntity(LocationEntity locationEntity) {
         return new Location(
                 locationEntity.getId(),
@@ -35,6 +38,7 @@ public class LocationMapper {
         );
     }
 
+    @Override
     public LocationEntity mapToEntity(Location location) {
         return new LocationEntity(
                 location.id(),
