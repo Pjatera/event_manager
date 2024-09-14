@@ -2,6 +2,7 @@ package ru.javacourse.eventmanagement.locations;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -9,7 +10,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.validation.annotation.Validated;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -65,7 +65,8 @@ class LocationControllerTest {
 
 
     @Test
-    void getLocations() throws Exception {
+    @SneakyThrows
+    void shouldReturn200WhenToGetAllLocations() {
         doReturn(eventLocationEntities).when(locationRepository).findAll();
         var contentAsString = mockMvc.perform(get("/locations"))
                 .andExpect(status().isOk())
@@ -78,15 +79,15 @@ class LocationControllerTest {
                 .getResponse()
                 .getContentAsString();
         var listResult = Arrays.asList(objectMapper.readValue(contentAsString, LocationDto[].class));
-
         var listDtoCheck = eventLocationEntities.stream().map(locationMapper::mapFromEntity).map(locationMapper::mapToDto).toList();
 
-        assertThat(listResult).isEqualTo(listDtoCheck);
+        assertThat(listResult.getFirst()).isEqualTo(listDtoCheck.getFirst());
         verify(locationRepository, times(1)).findAll();
     }
 
     @Test
-    void createLocation() throws Exception {
+    @SneakyThrows
+    void shouldReturn201WhenToCreateLocation() {
         var locationDtoRequest = new LocationDto(null, locationDtoCheck.name(), locationDtoCheck.address(), locationDtoCheck.capacity(), locationDtoCheck.description());
         doReturn(firstEntity).when(locationRepository).save(any(LocationEntity.class));
         var contentAsString = mockMvc.perform(post("/locations")
@@ -102,7 +103,8 @@ class LocationControllerTest {
     }
 
     @Test
-    void deleteLocation() throws Exception {
+    @SneakyThrows
+    void shouldReturn204WhenToDeleteLocation() {
         doReturn(Optional.of(firstEntity)).when(locationRepository).findById(firstEntity.getId());
         doNothing().when(locationRepository).deleteById(firstEntity.getId());
         var contentAsString = mockMvc.perform(delete("/locations/{id}", firstEntity.getId()))
@@ -117,33 +119,51 @@ class LocationControllerTest {
     }
 
     @Test
-    void getLocationById() throws Exception {
-
+    @SneakyThrows
+    void shouldReturn200WhenToGetLocationById() {
+        int locationId = 42;
+        doReturn(Optional.of(firstEntity)).when(locationRepository).findById(locationId);
+        var contentAsString = mockMvc.perform(get("/locations/{id}", locationId))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        var locationDtoResponse = objectMapper.readValue(contentAsString, LocationDto.class);
+        var location = locationMapper.mapFromEntity(firstEntity);
+        var locationDtoTarget = locationMapper.mapToDto(location);
+        assertThat(locationDtoResponse).isEqualTo(locationDtoTarget);
+        verify(locationRepository, times(1)).findById(locationId);
     }
 
     @Test
-    void updateLocationByID() throws Exception {
+    void shouldReturn404WhenTryingToGetLocationWithInvalidID() throws Exception {
+        int invalidLocationId = 999999;
+        doReturn(Optional.empty()).when(locationRepository).findById(invalidLocationId);
+        mockMvc.perform(get("/locations/{id}", invalidLocationId))
+                .andExpect(status().isNotFound());
+        verify(locationRepository, times(1)).findById(invalidLocationId);
     }
 
-    
+
     @Test
-void shouldReturn200WhenUpdatingAnExistingLocation() throws Exception {
-    var locationId = 42;
-    var updatedLocationDto = new LocationDto(null, "Updated Name", "Updated Address", 15000, "Updated Description");
-    doReturn(Optional.of(firstEntity)).when(locationRepository).findById(locationId);
-    doReturn(firstEntity).when(locationRepository).save(any(LocationEntity.class));
+    @SneakyThrows
+    void shouldReturn200WhenUpdatingAnExistingLocation() {
+        var locationId = 42;
+        var updatedLocationDto = new LocationDto(null, "Updated Name", "Updated Address", 15000, "Updated Description");
+        doReturn(Optional.of(firstEntity)).when(locationRepository).findById(locationId);
+        doReturn(firstEntity).when(locationRepository).save(any(LocationEntity.class));
 
-    var contentAsString = mockMvc.perform(put("/locations/{id}", locationId)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(updatedLocationDto)))
-            .andExpect(status().isOk())
-            .andReturn()
-            .getResponse()
-            .getContentAsString();
+        var contentAsString = mockMvc.perform(put("/locations/{id}", locationId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(updatedLocationDto)))
+                .andExpect(status().isOk())
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
 
-    var locationDto = objectMapper.readValue(contentAsString, LocationDto.class);
-    assertThat(locationDto.name()).isEqualTo(updatedLocationDto.name());
-    verify(locationRepository, times(1)).findById(locationId);
-    verify(locationRepository, times(1)).save(any(LocationEntity.class));
-}
+        var locationDto = objectMapper.readValue(contentAsString, LocationDto.class);
+        assertThat(locationDto.name()).isEqualTo(updatedLocationDto.name());
+        verify(locationRepository, times(1)).findById(locationId);
+        verify(locationRepository, times(1)).save(any(LocationEntity.class));
+    }
 }

@@ -14,10 +14,10 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.doReturn;
 
 @SpringBootTest
 @RequiredArgsConstructor
@@ -50,8 +50,10 @@ class LocationServiceTest {
     void findAll() {
         when(locationRepository.findAll()).thenReturn(eventLocationEntities);
         var all = locationService.findAll();
-        assertThat(all).isNotNull();
-        assertThat(all).hasSize(eventLocationEntities.size());
+        assertAll(
+                () -> assertThat(all).isNotNull(),
+                () -> assertThat(all).hasSize(eventLocationEntities.size())
+        );
         verify(locationRepository, times(1)).findAll();
 
     }
@@ -73,8 +75,10 @@ class LocationServiceTest {
 
         when(locationRepository.save(any(LocationEntity.class))).thenReturn(eventLocationEntity);
         var newLocationCreated = locationService.createNewLocation(newEventLocation);
-        assertThat(newLocationCreated).isNotNull();
-        assertThat(newLocationCreated).isEqualTo(eventLocationSource);
+        assertAll(
+                () -> assertThat(newLocationCreated).isNotNull(),
+                () -> assertThat(newLocationCreated).isEqualTo(eventLocationSource)
+        );
         verify(locationRepository, times(1)).save(any(LocationEntity.class));
 
     }
@@ -131,6 +135,7 @@ class LocationServiceTest {
 
     @Test
     void getLocationByID_shouldThrowException() {
+
         doReturn(Optional.ofNullable(null)).when(locationRepository).findById(anyInt());
         assertThrows(NotFoundLocation.class, () -> locationService.getLocationByID(anyInt()));
         verify(locationRepository, times(1)).findById(anyInt());
@@ -140,7 +145,7 @@ class LocationServiceTest {
     void updateById() {
         var locationEntity = eventLocationEntities.getFirst();
         var locationId = locationEntity.getId();
-        var locationUpdate =new Location(null,"UpdateName",
+        var locationUpdate = new Location(null, "UpdateName",
                 "г. СПб, Пятилеток 1",
                 12300,
                 "Спортивно-концертный комплекс в Санкт-Петербурге");
@@ -152,12 +157,13 @@ class LocationServiceTest {
         verify(locationRepository, times(1)).findById(locationId);
         verify(locationRepository, times(1)).save(any(LocationEntity.class));
     }
+
     @Test
     void updateById_shouldThrowException() {
         var locationEntity = eventLocationEntities.getFirst();
         var locationId = locationEntity.getId();
 
-        var locationUpdate =new Location(null,"UpdateName",
+        var locationUpdate = new Location(null, "UpdateName",
                 "г. СПб, Пятилеток 1",
                 100,
                 "Спортивно-концертный комплекс в Санкт-Петербурге");
