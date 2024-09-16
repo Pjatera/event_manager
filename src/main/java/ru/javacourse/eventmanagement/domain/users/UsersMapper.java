@@ -1,7 +1,9 @@
-package ru.javacourse.eventmanagement.users;
+package ru.javacourse.eventmanagement.domain.users;
 
 import org.springframework.stereotype.Component;
-import ru.javacourse.eventmanagement.utill.Mapper;
+import ru.javacourse.eventmanagement.entity.user.UserEntity;
+import ru.javacourse.eventmanagement.domain.Mapper;
+import ru.javacourse.eventmanagement.web.dto.users.UserDto;
 
 @Component
 public class UsersMapper implements Mapper<UserDto, User, UserEntity> {

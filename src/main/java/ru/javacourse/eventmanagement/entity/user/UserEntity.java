@@ -1,8 +1,9 @@
-package ru.javacourse.eventmanagement.users;
+package ru.javacourse.eventmanagement.entity.user;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import lombok.Data;
+import ru.javacourse.eventmanagement.domain.users.Role;
 
 @Entity
 @Data

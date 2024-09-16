@@ -1,4 +1,4 @@
-package ru.javacourse.eventmanagement.locations;
+package ru.javacourse.eventmanagement.web.dto.locations;
 
 public record LocationDto(
         Integer id,

@@ -7,7 +7,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestConstructor;
-import ru.javacourse.eventmanagement.exeptions.NotFoundLocation;
+import ru.javacourse.eventmanagement.domain.exeptions.NotFoundLocation;
+import ru.javacourse.eventmanagement.domain.locations.Location;
+import ru.javacourse.eventmanagement.entity.location.LocationEntity;
+import ru.javacourse.eventmanagement.repository.LocationRepository;
+import ru.javacourse.eventmanagement.service.LocationService;
 
 import java.util.ArrayList;
 import java.util.List;

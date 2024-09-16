@@ -1,4 +1,4 @@
-package ru.javacourse.eventmanagement.locations;
+package ru.javacourse.eventmanagement.web.controllers;
 
 
 import lombok.RequiredArgsConstructor;
@@ -6,6 +6,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.javacourse.eventmanagement.domain.locations.LocationMapper;
+import ru.javacourse.eventmanagement.domain.locations.Location;
+import ru.javacourse.eventmanagement.service.LocationService;
+import ru.javacourse.eventmanagement.web.dto.locations.LocationDto;
 
 import java.util.List;
 

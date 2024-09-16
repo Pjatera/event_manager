@@ -1,4 +1,4 @@
-package ru.javacourse.eventmanagement.locations;
+package ru.javacourse.eventmanagement.service;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -6,7 +6,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
-import ru.javacourse.eventmanagement.exeptions.NotFoundLocation;
+import ru.javacourse.eventmanagement.domain.exeptions.NotFoundLocation;
+import ru.javacourse.eventmanagement.domain.locations.LocationMapper;
+import ru.javacourse.eventmanagement.domain.locations.Location;
+import ru.javacourse.eventmanagement.entity.location.LocationEntity;
+import ru.javacourse.eventmanagement.repository.LocationRepository;
 
 import java.util.List;
 

@@ -1,8 +1,12 @@
-package ru.javacourse.eventmanagement.users;
+package ru.javacourse.eventmanagement.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.javacourse.eventmanagement.domain.users.Role;
+import ru.javacourse.eventmanagement.domain.users.User;
+import ru.javacourse.eventmanagement.domain.users.UsersMapper;
+import ru.javacourse.eventmanagement.repository.UserRepository;
 
 @Service
 @RequiredArgsConstructor
@@ -13,7 +17,7 @@ public class UserService {
 
     @Transactional
     public User createUser(User newUser) {
-        newUser.setRole(Role.USER);
+        newUser.setRole(Role.ROLE_USER);
         var newUserEntity = usersMapper.mapToEntity(newUser);
         var login = newUserEntity.getLogin();
         if (userRepository.findByLogin(login).isPresent()) {

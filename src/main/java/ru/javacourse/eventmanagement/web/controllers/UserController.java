@@ -1,9 +1,12 @@
-package ru.javacourse.eventmanagement.users;
+package ru.javacourse.eventmanagement.web.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.javacourse.eventmanagement.domain.users.UsersMapper;
+import ru.javacourse.eventmanagement.service.UserService;
+import ru.javacourse.eventmanagement.web.dto.users.UserDto;
 
 @RestController
 @RequestMapping("/users")

@@ -1,4 +1,4 @@
-package ru.javacourse.eventmanagement.users;
+package ru.javacourse.eventmanagement.domain.users;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;

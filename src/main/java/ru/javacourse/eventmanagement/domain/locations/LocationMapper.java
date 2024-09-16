@@ -1,7 +1,9 @@
-package ru.javacourse.eventmanagement.locations;
+package ru.javacourse.eventmanagement.domain.locations;
 
 import org.springframework.stereotype.Component;
-import ru.javacourse.eventmanagement.utill.Mapper;
+import ru.javacourse.eventmanagement.entity.location.LocationEntity;
+import ru.javacourse.eventmanagement.domain.Mapper;
+import ru.javacourse.eventmanagement.web.dto.locations.LocationDto;
 
 @Component
 public class LocationMapper implements Mapper<LocationDto, Location, LocationEntity> {

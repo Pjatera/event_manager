@@ -1,4 +1,4 @@
-package ru.javacourse.eventmanagement.exeptions;
+package ru.javacourse.eventmanagement.domain.exeptions;
 
 import jakarta.persistence.EntityNotFoundException;
 

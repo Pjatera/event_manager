@@ -1,10 +1,9 @@
-package ru.javacourse.eventmanagement.locations;
+package ru.javacourse.eventmanagement.domain.locations;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Null;
-import ru.javacourse.eventmanagement.utill.Marker;
 
 public record Location(
         @Null( message = "For a new EventLocation, the ID must be empty")
