@@ -10,7 +10,7 @@ import ru.javacourse.eventmanagement.domain.users.Role;
 @Table(name = "users")
 public class UserEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
     @Column(name = "login", unique = true)
@@ -19,7 +19,8 @@ public class UserEntity {
     private String password;
     @Column(name = "age")
     @Min(0)
-    private int age;
+    private Integer age;
     @Enumerated(EnumType.STRING)
+    @Column(name = "role")
     private Role role;
 }

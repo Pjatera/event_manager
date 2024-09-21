@@ -49,12 +49,12 @@ class LocationControllerTest {
         this.objectMapper = objectMapper;
         this.locationMapper = locationMapper;
 
-        var icePalace = new LocationEntity(42,
+        var icePalace = new LocationEntity(42L,
                 "Ледовый дворец",
                 "г. СПб, Пятилеток 1",
                 12300,
                 "Спортивно-концертный комплекс в Санкт-Петербурге");
-        var grandHall = new LocationEntity(43,
+        var grandHall = new LocationEntity(43L,
                 "Grand Hall",
                 "123 Main St, Springfield",
                 500,
@@ -126,7 +126,7 @@ class LocationControllerTest {
     @Test
     @SneakyThrows
     void shouldReturn200WhenToGetLocationById() {
-        int locationId = 42;
+        long locationId = 42L;
         doReturn(Optional.of(firstEntity)).when(locationRepository).findById(locationId);
         var contentAsString = mockMvc.perform(get("/locations/{id}", locationId))
                 .andExpect(status().isOk())
@@ -142,7 +142,7 @@ class LocationControllerTest {
 
     @Test
     void shouldReturn404WhenTryingToGetLocationWithInvalidID() throws Exception {
-        int invalidLocationId = 999999;
+        long invalidLocationId = 999999L;
         doReturn(Optional.empty()).when(locationRepository).findById(invalidLocationId);
         mockMvc.perform(get("/locations/{id}", invalidLocationId))
                 .andExpect(status().isNotFound());
@@ -153,7 +153,7 @@ class LocationControllerTest {
     @Test
     @SneakyThrows
     void shouldReturn200WhenUpdatingAnExistingLocation() {
-        var locationId = 42;
+        long locationId = 42L;
         var updatedLocationDto = new LocationDto(null, "Updated Name", "Updated Address", 15000, "Updated Description");
         doReturn(Optional.of(firstEntity)).when(locationRepository).findById(locationId);
         doReturn(firstEntity).when(locationRepository).save(any(LocationEntity.class));

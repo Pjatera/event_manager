@@ -5,6 +5,6 @@ import org.springframework.stereotype.Repository;
 import ru.javacourse.eventmanagement.entity.location.LocationEntity;
 
 @Repository
-public interface LocationRepository extends JpaRepository<LocationEntity, Integer> {
+public interface LocationRepository extends JpaRepository<LocationEntity, Long> {
 
 }

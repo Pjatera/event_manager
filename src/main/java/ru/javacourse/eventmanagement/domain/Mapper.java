@@ -7,6 +7,7 @@ package ru.javacourse.eventmanagement.domain;
  * @param <T2> The type of the model object from the service.
  * @param <T3> The type of the entity object from the database.
  */
+
 public interface Mapper<T1, T2, T3> {
 
     /**

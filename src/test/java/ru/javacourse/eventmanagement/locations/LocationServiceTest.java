@@ -35,12 +35,12 @@ class LocationServiceTest {
 
     @BeforeEach
     void setUp() {
-        var icePalace = new LocationEntity(42,
+        var icePalace = new LocationEntity(42L,
                 "Ледовый дворец",
                 "г. СПб, Пятилеток 1",
                 12300,
                 "Спортивно-концертный комплекс в Санкт-Петербурге");
-        var grandHall = new LocationEntity(43,
+        var grandHall = new LocationEntity(43L,
                 "Grand Hall",
                 "123 Main St, Springfield",
                 500,
@@ -64,11 +64,11 @@ class LocationServiceTest {
 
     @Test
     void createNewLocation_created() {
-        var eventLocationEntity = new LocationEntity(44, "Sunny Conference Room",
+        var eventLocationEntity = new LocationEntity(44L, "Sunny Conference Room",
                 "456 Ocean Drive, Seaside Town",
                 50,
                 "A bright and airy conference room with a stunning ocean view, ideal for medium-sized meetings.");
-        var eventLocationSource = new Location(44, "Sunny Conference Room",
+        var eventLocationSource = new Location(44L, "Sunny Conference Room",
                 "456 Ocean Drive, Seaside Town",
                 50,
                 "A bright and airy conference room with a stunning ocean view, ideal for medium-sized meetings.");
@@ -90,8 +90,8 @@ class LocationServiceTest {
     @Test
     void createNewLocation_shouldThrowException() {
 
-        assertThrows(NullPointerException.class, () -> locationService.createNewLocation(null));
-        assertThrows(ConstraintViolationException.class, () -> locationService.createNewLocation(new Location(44, "Sunny Conference Room",
+        assertThrows(ConstraintViolationException.class, () -> locationService.createNewLocation(null));
+        assertThrows(ConstraintViolationException.class, () -> locationService.createNewLocation(new Location(44L, "Sunny Conference Room",
                 "456 Ocean Drive, Seaside Town",
                 50,
                 "A bright and airy conference room with a stunning ocean view, ideal for medium-sized meetings.")));
@@ -114,7 +114,7 @@ class LocationServiceTest {
 
     @Test
     void deleteLocation_successfully() {
-        int locationId = 42;
+        long locationId = 42L;
         var sunnyConferenceRoom = eventLocationEntities.getFirst();
         doReturn(Optional.of(sunnyConferenceRoom)).when(locationRepository).findById(locationId);
         doNothing().when(locationRepository).deleteById(locationId);
@@ -140,9 +140,9 @@ class LocationServiceTest {
     @Test
     void getLocationByID_shouldThrowException() {
 
-        doReturn(Optional.ofNullable(null)).when(locationRepository).findById(anyInt());
-        assertThrows(NotFoundLocation.class, () -> locationService.getLocationByID(anyInt()));
-        verify(locationRepository, times(1)).findById(anyInt());
+        doReturn(Optional.ofNullable(null)).when(locationRepository).findById(anyLong());
+        assertThrows(NotFoundLocation.class, () -> locationService.getLocationByID(anyLong()));
+        verify(locationRepository, times(1)).findById(anyLong());
     }
 
     @Test
