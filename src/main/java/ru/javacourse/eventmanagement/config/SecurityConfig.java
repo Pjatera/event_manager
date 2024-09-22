@@ -13,20 +13,15 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractAuthenticationFilterConfigurer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import ru.javacourse.eventmanagement.domain.users.User;
 import ru.javacourse.eventmanagement.service.UserService;
-
-import java.util.List;
+import ru.javacourse.eventmanagement.web.security.JwtService;
+import ru.javacourse.eventmanagement.web.security.JwtTokenFilter;
 
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
@@ -37,49 +32,57 @@ public class SecurityConfig {
 
     private final ApplicationContext applicationContext;
     private final UserService userService;
+    private final UserDetailsService userDetailsService;
+    private final JwtService jwtService;
 
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-
         return new BCryptPasswordEncoder();
     }
 
 
+    @Bean
+    @SneakyThrows
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) {
+        return configuration.getAuthenticationManager();
 
-//    @Bean
-//    @SneakyThrows
-//    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) {
-//        return configuration.getAuthenticationManager();
-//
-//
-//    }
-//    @Bean
-//    public AuthenticationProvider authenticationProvider() {
-//        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-//        authProvider.setUserDetailsService(userService.userDetailsService());
-//        authProvider.setPasswordEncoder(passwordEncoder());
-//        return authProvider;
-//    }
+
+    }
+    @Bean
+    public AuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userDetailsService);
+        authProvider.setPasswordEncoder(passwordEncoder());
+        return authProvider;
+    }
 
     @Bean
     @SneakyThrows
     public SecurityFilterChain securityConfigure(HttpSecurity http) {
         http.csrf(AbstractHttpConfigurer::disable)
-                .cors(Customizer.withDefaults()).
-                authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/users","/users/auth").permitAll()
-                        .requestMatchers("/swagger-ui/**", "/swagger-resources/*", "/v3/api-docs/**","/openapi.yaml").permitAll()
-                        .requestMatchers("/locations/**","/users/{userId}").hasRole("ADMIN")
-                        .anyRequest().authenticated());
+                .cors(Customizer.withDefaults())
+                .httpBasic(AbstractHttpConfigurer::disable)
+                .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
+                .exceptionHandling(auth -> auth.authenticationEntryPoint((request, response, authException) -> {
+                            response.setStatus(HttpStatus.UNAUTHORIZED.value());
+                            response.getWriter().write(authException.getMessage());
+                        })
+                        .accessDeniedHandler((request, response, accessDeniedException) -> {
+                            response.setStatus(HttpStatus.FORBIDDEN.value());
+                            response.getWriter().write(accessDeniedException.getMessage());
+                        }))
 
-               // .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS));
-//                .authenticationProvider(authenticationProvider());
-               // .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/users", "/users/auth").permitAll()
+                        .requestMatchers("/swagger-ui/**", "/swagger-resources/*", "/v3/api-docs/**", "/openapi.yaml").permitAll()
+                        .requestMatchers("/locations/**", "/users/{userId}").hasRole("ADMIN")
+                        .anyRequest().authenticated())
+                    .addFilterBefore(new JwtTokenFilter(jwtService), UsernamePasswordAuthenticationFilter.class);
+
+
         return http.build();
     }
-
-
 
 
 

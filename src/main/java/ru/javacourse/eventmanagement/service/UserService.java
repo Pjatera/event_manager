@@ -34,6 +34,7 @@ public class UserService {
     }
 
 
+
     @Transactional
     public User createUser(@Valid User newUser) {
         newUser.setRole(Role.ROLE_USER);

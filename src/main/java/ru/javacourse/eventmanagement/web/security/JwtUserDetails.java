@@ -1,16 +1,18 @@
-package ru.javacourse.eventmanagement.domain.users;
+package ru.javacourse.eventmanagement.web.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import ru.javacourse.eventmanagement.domain.users.User;
 
 import java.util.Collection;
 import java.util.List;
 
 @RequiredArgsConstructor
-public class CustomUserDetails implements UserDetails {
+public class JwtUserDetails implements UserDetails {
     private final User user;
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -26,4 +28,5 @@ public class CustomUserDetails implements UserDetails {
     public String getUsername() {
         return user.getLogin();
     }
+
 }
