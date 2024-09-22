@@ -1,11 +1,13 @@
 package ru.javacourse.eventmanagement.domain.locations;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.MappingConstants;
+import org.mapstruct.ReportingPolicy;
 import ru.javacourse.eventmanagement.entity.location.LocationEntity;
 import ru.javacourse.eventmanagement.web.dto.locations.LocationDto;
 
 
-@Mapper(componentModel = "spring")
+@Mapper(unmappedSourcePolicy = ReportingPolicy.IGNORE,componentModel = MappingConstants.ComponentModel.SPRING)
 public interface LocationMapper {
     LocationDto mapToDto(Location location);
 

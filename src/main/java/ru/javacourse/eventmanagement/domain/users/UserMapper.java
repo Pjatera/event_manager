@@ -1,11 +1,11 @@
 package ru.javacourse.eventmanagement.domain.users;
 
-import org.mapstruct.Mapper;
+import org.mapstruct.*;
 import ru.javacourse.eventmanagement.entity.user.UserEntity;
 import ru.javacourse.eventmanagement.web.dto.users.UserDto;
 
 
-@Mapper(componentModel = "spring")
+@Mapper(unmappedSourcePolicy = ReportingPolicy.IGNORE,componentModel = MappingConstants.ComponentModel.SPRING)
 public interface UserMapper {
 
     UserDto mapToDto(User user);
@@ -17,3 +17,5 @@ public interface UserMapper {
     UserEntity mapToEntity(User user);
 
 }
+
+

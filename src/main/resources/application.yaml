@@ -3,19 +3,24 @@ spring:
     name: event-management
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
       show-sql: true
       format_sql: true
+      properties:
+        hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
+
   datasource:
     url: jdbc:postgresql://localhost:5435/postgres
     username: postgres
     password: mysecretpassword
     driver-class-name: org.postgresql.Driver
-#  sql:
-#    init:
-#      mode: always
-#      continue-on-error: false
-#      data-locations: classpath:demo_data.sql
+
+  sql:
+    init:
+      mode:  never
+      continue-on-error: false
+      data-locations: classpath:demo_data.sql
+      schema-locations: classpath:schema.sql
 
 springdoc:
   swagger-ui:
@@ -28,4 +33,7 @@ token:
   signing:
     key: 53A73E5F1C4E0A2D3B5F2D784E6A1B423D6F247D1F6E5C3A596D635A75327855
 
-
+security:
+  jwt:
+    secret: 0JzQsNC80LAg0LzRi9C70LAg0YDQsNC80YMs0LAg0JrQsNGA0Lsg0YMg0JrQu9Cw0YDRiyDRg9C60YDQsNC7INC60L7RgNCw0LvRiw==
+    access: 3600000

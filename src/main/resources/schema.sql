@@ -16,9 +16,6 @@ CREATE TABLE IF NOT EXISTS event_locations
     address     VARCHAR(255) not null,
     capacity    INT          not null check (capacity > 4),
     description VARCHAR(255)
-)
-
-CREATE TABLE IF NOT EXISTS users_roles(
-    iser_id
-
 );
+
+

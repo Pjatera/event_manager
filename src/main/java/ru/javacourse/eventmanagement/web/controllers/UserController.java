@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.javacourse.eventmanagement.domain.users.UserMapper;
-import ru.javacourse.eventmanagement.service.JwtService;
+import ru.javacourse.eventmanagement.web.security.JwtService;
 import ru.javacourse.eventmanagement.service.UserService;
 import ru.javacourse.eventmanagement.web.dto.auth.JwtResponse;
 import ru.javacourse.eventmanagement.web.dto.auth.UserCredentials;
