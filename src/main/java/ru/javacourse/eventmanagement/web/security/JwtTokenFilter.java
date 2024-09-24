@@ -4,8 +4,8 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,6 +19,7 @@ import java.io.IOException;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class JwtTokenFilter extends OncePerRequestFilter {
     private static final String BEARER_PREFIX = "Bearer ";
     private final JwtService jwtService;
@@ -26,7 +27,9 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain) throws ServletException, IOException {
         var bearerToken = request.getHeader(HttpHeaders.AUTHORIZATION);
 
         if (StringUtils.isEmpty(bearerToken) || !bearerToken.startsWith(BEARER_PREFIX)) {
@@ -36,7 +39,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         bearerToken = bearerToken.substring(7);
         var login = jwtService.extractUserName(bearerToken);
         if (StringUtils.isNoneEmpty(login) && SecurityContextHolder.getContext().getAuthentication() == null) {
-            var user = userService.getByLogin(login);
+            var user = userService.findUserByLogin(login);
             var jwtUserDetails = new JwtUserDetails(user);
             if (jwtService.isValidToken(bearerToken, jwtUserDetails)) {
                 var context = SecurityContextHolder.createEmptyContext();
@@ -47,6 +50,8 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 context.setAuthentication(usernamePasswordAuthenticationToken);
                 SecurityContextHolder.setContext(context);
             }
+        } else {
+            log.error("Invalid or expired token from login user : {}", login);
         }
         filterChain.doFilter(request, response);
     }

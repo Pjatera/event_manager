@@ -62,9 +62,10 @@ public class SecurityConfig {
     @Bean
     @SneakyThrows
     public SecurityFilterChain securityConfigure(HttpSecurity http) {
-        http.csrf(AbstractHttpConfigurer::disable)
-                .cors(Customizer.withDefaults())
+        return http.csrf(AbstractHttpConfigurer::disable)
+                .cors(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
+                .formLogin(AbstractHttpConfigurer::disable)
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
                 .exceptionHandling(auth -> auth.authenticationEntryPoint((request, response, authException) -> {
                             response.setStatus(HttpStatus.UNAUTHORIZED.value());
@@ -81,11 +82,8 @@ public class SecurityConfig {
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
                 .anonymous(Customizer.withDefaults())
-                .formLogin(Customizer.withDefaults())
-                .headers(Customizer.withDefaults());
-
-
-        return http.build();
+                .headers(Customizer.withDefaults())
+                .build();
     }
 
 

@@ -5,6 +5,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -38,11 +39,11 @@ public class JwtService {
     public JwtResponse authenticateUser(UserCredentials userCredentials) {
         var loginFromUserCredentials = userCredentials.login();
         var passwordFromUserCredentials = userCredentials.password();
-        var user = userService.getByLogin(loginFromUserCredentials);
-        if (!user.getPassword().equals(passwordFromUserCredentials)) {
+        var user = userService.findUserByLogin(loginFromUserCredentials);
+        if (!user.password().equals(passwordFromUserCredentials)) {
             throw new IllegalArgumentException("Неверный пароль");
         }
-        return new JwtResponse(generateAccessToken(new JwtUserDetails(user), user.getId()));
+        return new JwtResponse(generateAccessToken(new JwtUserDetails(user), user.id()));
     }
 
 
