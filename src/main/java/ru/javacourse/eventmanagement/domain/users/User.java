@@ -4,6 +4,7 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Null;
 import jakarta.validation.constraints.Size;
+import lombok.ToString;
 
 
 public record User(
@@ -18,5 +19,13 @@ public record User(
         @Min(value = 18, message = "User age must be more than 18 ")
         Integer age,
         Role role) {
-
+        @Override
+        public String toString() {
+                return "User{" +
+                       "id=" + id +
+                       ", login='" + login +
+                       ", age=" + age +
+                       ", role=" + role +
+                       '}';
+        }
 }

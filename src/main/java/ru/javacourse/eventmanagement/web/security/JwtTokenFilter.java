@@ -13,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import ru.javacourse.eventmanagement.service.JwtService;
 import ru.javacourse.eventmanagement.service.UserService;
 
 import java.io.IOException;
@@ -37,9 +38,9 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             return;
         }
         bearerToken = bearerToken.substring(7);
-        var login = jwtService.extractUserName(bearerToken);
+        var login = jwtService.extractUserLogin(bearerToken);
         if (StringUtils.isNoneEmpty(login) && SecurityContextHolder.getContext().getAuthentication() == null) {
-            var user = userService.findUserByLogin(login);
+            var user = userService.getUserByLogin(login);
             var jwtUserDetails = new JwtUserDetails(user);
             if (jwtService.isValidToken(bearerToken, jwtUserDetails)) {
                 var context = SecurityContextHolder.createEmptyContext();

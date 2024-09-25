@@ -10,8 +10,8 @@ import org.springframework.validation.annotation.Validated;
 import ru.javacourse.eventmanagement.domain.exeptions.NotFoundLocation;
 import ru.javacourse.eventmanagement.domain.locations.Location;
 import ru.javacourse.eventmanagement.domain.locations.LocationMapper;
-import ru.javacourse.eventmanagement.entity.location.LocationEntity;
-import ru.javacourse.eventmanagement.repository.LocationRepository;
+import ru.javacourse.eventmanagement.db.entity.location.LocationEntity;
+import ru.javacourse.eventmanagement.db.repository.LocationRepository;
 
 import java.util.List;
 
