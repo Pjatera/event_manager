@@ -12,8 +12,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.javacourse.eventmanagement.domain.locations.Location;
 import ru.javacourse.eventmanagement.domain.locations.LocationMapper;
-import ru.javacourse.eventmanagement.entity.location.LocationEntity;
-import ru.javacourse.eventmanagement.repository.LocationRepository;
+import ru.javacourse.eventmanagement.db.entity.location.LocationEntity;
+import ru.javacourse.eventmanagement.db.repository.LocationRepository;
 import ru.javacourse.eventmanagement.web.dto.locations.LocationDto;
 
 import java.util.ArrayList;

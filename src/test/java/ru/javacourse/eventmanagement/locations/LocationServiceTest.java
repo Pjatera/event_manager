@@ -9,8 +9,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestConstructor;
 import ru.javacourse.eventmanagement.domain.exeptions.NotFoundLocation;
 import ru.javacourse.eventmanagement.domain.locations.Location;
-import ru.javacourse.eventmanagement.entity.location.LocationEntity;
-import ru.javacourse.eventmanagement.repository.LocationRepository;
+import ru.javacourse.eventmanagement.db.entity.location.LocationEntity;
+import ru.javacourse.eventmanagement.db.repository.LocationRepository;
 import ru.javacourse.eventmanagement.service.LocationService;
 
 import java.util.ArrayList;

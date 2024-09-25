@@ -2,7 +2,6 @@ package ru.javacourse.eventmanagement.config;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -19,8 +18,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import ru.javacourse.eventmanagement.service.UserService;
-import ru.javacourse.eventmanagement.web.security.JwtService;
 import ru.javacourse.eventmanagement.web.security.JwtTokenFilter;
 
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
@@ -30,12 +27,9 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    private final ApplicationContext applicationContext;
-    private final UserService userService;
-    private final UserDetailsService userDetailsService;
-    private final JwtService jwtService;
-    private final JwtTokenFilter jwtTokenFilter;
 
+    private final UserDetailsService userDetailsService;
+    private final JwtTokenFilter jwtTokenFilter;
 
     @Bean
     public PasswordEncoder passwordEncoder() {

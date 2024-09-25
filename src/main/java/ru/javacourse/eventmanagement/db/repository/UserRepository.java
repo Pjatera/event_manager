@@ -1,7 +1,7 @@
-package ru.javacourse.eventmanagement.repository;
+package ru.javacourse.eventmanagement.db.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import ru.javacourse.eventmanagement.entity.user.UserEntity;
+import ru.javacourse.eventmanagement.db.entity.user.UserEntity;
 
 import java.util.Optional;
 

@@ -7,11 +7,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
+import ru.javacourse.eventmanagement.db.entity.location.LocationEntity;
+import ru.javacourse.eventmanagement.db.repository.LocationRepository;
 import ru.javacourse.eventmanagement.domain.exeptions.NotFoundLocation;
 import ru.javacourse.eventmanagement.domain.locations.Location;
 import ru.javacourse.eventmanagement.domain.locations.LocationMapper;
-import ru.javacourse.eventmanagement.entity.location.LocationEntity;
-import ru.javacourse.eventmanagement.repository.LocationRepository;
 
 import java.util.List;
 
@@ -39,13 +39,17 @@ public class LocationService {
     }
 
     @Transactional
-    public Location deleteLocation(@PositiveOrZero(message = "ID must be positive or zero") @NotNull Long locationId) {
+    public Location deleteLocation(@PositiveOrZero(message = "ID must be positive or zero")
+                                   @NotNull
+                                   Long locationId) {
         var locationEntity = getLocationEntityById(locationId);
         locationRepository.deleteById(locationId);
         return locationMapper.mapFromEntity(locationEntity);
     }
 
-    public Location getLocationByID(@PositiveOrZero(message = "ID must be positive or zero") @NotNull Long locationId) {
+    public Location getLocationByID(@PositiveOrZero(message = "ID must be positive or zero")
+                                    @NotNull
+                                    Long locationId) {
         return locationMapper.mapFromEntity(getLocationEntityById(locationId));
     }
 
@@ -55,7 +59,11 @@ public class LocationService {
     }
 
     @Transactional
-    public Location updateById(@PositiveOrZero(message = "ID must be positive or zero") @NotNull Long locationId, @Valid @NotNull Location location) {
+    public Location updateById(@PositiveOrZero(message = "ID must be positive or zero")
+                               @NotNull
+                               Long locationId,
+                               @Valid @NotNull
+                               Location location) {
         var locationEntity = locationRepository.findById(locationId)
                 .orElseThrow(() -> new NotFoundLocation("Location with ID %d not found".formatted(locationId)));
         isChangingCapacityCorrect(location, locationEntity);
@@ -69,7 +77,8 @@ public class LocationService {
 
     private void isChangingCapacityCorrect(@NotNull Location locationUpdate, @NotNull LocationEntity locationByIdOld) {
         if (locationByIdOld.getCapacity() > locationUpdate.capacity()) {
-            throw new IllegalArgumentException("The location with the ID %d is too small, it cannot be less than %d".formatted(locationByIdOld.getId(), locationByIdOld.getCapacity()));
+            throw new IllegalArgumentException("The location with the ID %d is too small, it cannot be less than %d"
+                    .formatted(locationByIdOld.getId(), locationByIdOld.getCapacity()));
         }
     }
 }

@@ -1,36 +1,30 @@
-package ru.javacourse.eventmanagement.entity.user;
+package ru.javacourse.eventmanagement.db.entity.location;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import org.hibernate.proxy.HibernateProxy;
-import ru.javacourse.eventmanagement.domain.users.Role;
 
 import java.util.Objects;
 
-@Entity
 @Data
-@Table(name = "users")
+@Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserEntity {
+@Table(name = "event_locations")
+public class LocationEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id",nullable = false)
     private Long id;
-    @Column(name = "login", unique = true)
-    private String login;
-    @Column(name = "password")
-    private String password;
-    @Column(name = "age")
-    @Min(0)
-    private Integer age;
-    @Enumerated(EnumType.STRING)
-    @Column(name = "role")
-    private Role role;
+    @Column(name = "name")
+    private String name;
+    @Column(name = "address")
+    private String address;
+    @Column(name = "capacity")
+    private int capacity;
+    @Column(name = "description")
+    private String description;
 
     @Override
     public final boolean equals(Object o) {
@@ -39,7 +33,7 @@ public class UserEntity {
         Class<?> oEffectiveClass = o instanceof HibernateProxy hProxy ? hProxy.getHibernateLazyInitializer().getPersistentClass() : o.getClass();
         Class<?> thisEffectiveClass = this instanceof HibernateProxy hProxyThis ? hProxyThis.getHibernateLazyInitializer().getPersistentClass() : this.getClass();
         if (thisEffectiveClass != oEffectiveClass) return false;
-        UserEntity that = (UserEntity) o;
+        LocationEntity that = (LocationEntity) o;
         return getId() != null && Objects.equals(getId(), that.getId());
     }
 
