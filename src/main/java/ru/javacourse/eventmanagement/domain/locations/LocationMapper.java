@@ -7,7 +7,7 @@ import ru.javacourse.eventmanagement.db.entity.location.LocationEntity;
 import ru.javacourse.eventmanagement.web.dto.locations.LocationDto;
 
 
-@Mapper(unmappedSourcePolicy = ReportingPolicy.IGNORE,componentModel = MappingConstants.ComponentModel.SPRING)
+@Mapper(unmappedSourcePolicy = ReportingPolicy.IGNORE, componentModel = MappingConstants.ComponentModel.SPRING)
 public interface LocationMapper {
     LocationDto mapToDto(Location location);
 

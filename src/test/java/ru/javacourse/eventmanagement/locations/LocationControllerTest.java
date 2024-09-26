@@ -9,11 +9,12 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.javacourse.eventmanagement.domain.locations.Location;
-import ru.javacourse.eventmanagement.domain.locations.LocationMapper;
 import ru.javacourse.eventmanagement.db.entity.location.LocationEntity;
 import ru.javacourse.eventmanagement.db.repository.LocationRepository;
+import ru.javacourse.eventmanagement.domain.locations.Location;
+import ru.javacourse.eventmanagement.domain.locations.LocationMapper;
 import ru.javacourse.eventmanagement.web.dto.locations.LocationDto;
 
 import java.util.ArrayList;
@@ -29,7 +30,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
-
 @AutoConfigureMockMvc
 class LocationControllerTest {
     @MockBean
@@ -71,6 +71,7 @@ class LocationControllerTest {
 
     @Test
     @SneakyThrows
+    @WithMockUser
     void shouldReturn200WhenToGetAllLocations() {
         doReturn(eventLocationEntities).when(locationRepository).findAll();
         var contentAsString = mockMvc.perform(get("/locations"))
@@ -92,6 +93,7 @@ class LocationControllerTest {
 
     @Test
     @SneakyThrows
+    @WithMockUser(roles = "ADMIN")
     void shouldReturn201WhenToCreateLocation() {
         var locationDtoRequest = new LocationDto(null, locationDtoCheck.name(), locationDtoCheck.address(), locationDtoCheck.capacity(), locationDtoCheck.description());
         doReturn(firstEntity).when(locationRepository).save(any(LocationEntity.class));
@@ -109,6 +111,7 @@ class LocationControllerTest {
 
     @Test
     @SneakyThrows
+    @WithMockUser(roles = "ADMIN")
     void shouldReturn204WhenToDeleteLocation() {
         doReturn(Optional.of(firstEntity)).when(locationRepository).findById(firstEntity.getId());
         doNothing().when(locationRepository).deleteById(firstEntity.getId());
@@ -125,6 +128,7 @@ class LocationControllerTest {
 
     @Test
     @SneakyThrows
+    @WithMockUser
     void shouldReturn200WhenToGetLocationById() {
         long locationId = 42L;
         doReturn(Optional.of(firstEntity)).when(locationRepository).findById(locationId);
@@ -141,6 +145,7 @@ class LocationControllerTest {
     }
 
     @Test
+    @WithMockUser
     void shouldReturn404WhenTryingToGetLocationWithInvalidID() throws Exception {
         long invalidLocationId = 999999L;
         doReturn(Optional.empty()).when(locationRepository).findById(invalidLocationId);
@@ -152,6 +157,7 @@ class LocationControllerTest {
 
     @Test
     @SneakyThrows
+    @WithMockUser(roles = "ADMIN")
     void shouldReturn200WhenUpdatingAnExistingLocation() {
         long locationId = 42L;
         var updatedLocationDto = new LocationDto(null, "Updated Name", "Updated Address", 15000, "Updated Description");

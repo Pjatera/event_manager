@@ -1,5 +1,6 @@
 package ru.javacourse.eventmanagement.locations;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
@@ -7,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestConstructor;
-import ru.javacourse.eventmanagement.domain.exeptions.NotFoundLocation;
 import ru.javacourse.eventmanagement.domain.locations.Location;
 import ru.javacourse.eventmanagement.db.entity.location.LocationEntity;
 import ru.javacourse.eventmanagement.db.repository.LocationRepository;
@@ -141,7 +141,7 @@ class LocationServiceTest {
     void getLocationByID_shouldThrowException() {
 
         doReturn(Optional.ofNullable(null)).when(locationRepository).findById(anyLong());
-        assertThrows(NotFoundLocation.class, () -> locationService.getLocationByID(anyLong()));
+        assertThrows(EntityNotFoundException.class, () -> locationService.getLocationByID(anyLong()));
         verify(locationRepository, times(1)).findById(anyLong());
     }
 

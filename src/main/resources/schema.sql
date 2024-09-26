@@ -1,3 +1,4 @@
+
 CREATE TABLE IF NOT EXISTS users
 (
     id       BIGSERIAL PRIMARY KEY,
@@ -17,5 +18,8 @@ CREATE TABLE IF NOT EXISTS event_locations
     capacity    INT          not null check (capacity > 4),
     description VARCHAR(255)
 );
+TRUNCATE TABLE users, event_locations;
+
+
 
 

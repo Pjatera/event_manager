@@ -5,6 +5,8 @@ import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -14,29 +16,37 @@ import java.time.LocalDateTime;
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-    @ExceptionHandler({MethodArgumentTypeMismatchException.class, IllegalArgumentException.class, ConstraintViolationException.class})
-    public ResponseEntity<CustomErrorMessage> mismatchException(Exception ex) {
-        log.error(ex.getMessage(), ex);
+    @ExceptionHandler({MethodArgumentNotValidException.class, IllegalArgumentException.class, ConstraintViolationException.class})
+    public ResponseEntity<CustomErrorMessage> mismatchException(RuntimeException ex) {
+        log.error("Bad request exception", ex);
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
-                .body(new CustomErrorMessage("Некорректный запрос", ex.getMessage(), LocalDateTime.now()));
+                .body(new CustomErrorMessage("Bad request", ex.getMessage(), LocalDateTime.now()));
     }
 
 
-    @ExceptionHandler({NotFoundLocation.class, NotFoundUser.class})
+    @ExceptionHandler({EntityNotFoundException.class})
     public ResponseEntity<CustomErrorMessage> notFoundException(EntityNotFoundException ex) {
-        log.error(ex.getMessage(), ex);
+        log.error("Entity not found exception", ex);
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
-                .body(new CustomErrorMessage("Сущность не найдена", ex.getMessage(), LocalDateTime.now()));
+                .body(new CustomErrorMessage("Entity not found", ex.getMessage(), LocalDateTime.now()));
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<CustomErrorMessage> badCredentialsException(BadCredentialsException ex) {
+        log.error("Failed to authenticate", ex);
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(new CustomErrorMessage("Bad credential", ex.getMessage(), LocalDateTime.now()));
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<CustomErrorMessage> exception(Exception ex) {
-        log.error(ex.getMessage(), ex);
+        log.error("Internal Server Error", ex);
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new CustomErrorMessage("Внутренняя ошибка сервера", ex.getMessage(), LocalDateTime.now()));
+                .body(new CustomErrorMessage("Internal Server Error", ex.getMessage(), LocalDateTime.now()));
     }
 
 }

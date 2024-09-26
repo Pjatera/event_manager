@@ -1,13 +1,15 @@
 package ru.javacourse.eventmanagement.web.controllers;
 
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.javacourse.eventmanagement.domain.locations.LocationMapper;
 import ru.javacourse.eventmanagement.domain.locations.Location;
+import ru.javacourse.eventmanagement.domain.locations.LocationMapper;
 import ru.javacourse.eventmanagement.service.LocationService;
 import ru.javacourse.eventmanagement.web.dto.locations.LocationDto;
 
@@ -19,6 +21,7 @@ import java.util.List;
 @Slf4j
 public class LocationController {
 
+    private static final String TEMPLATE_MESSAGE_ID_VALIDATION = "Id must be positive or equal to 0";
     private final LocationService locationService;
     private final LocationMapper locationMapper;
 
@@ -31,21 +34,21 @@ public class LocationController {
 
 
     @PostMapping
-    public ResponseEntity<LocationDto> createLocation(@RequestBody  LocationDto locationDto) {
+    public ResponseEntity<LocationDto> createLocation(@RequestBody @Valid LocationDto locationDto) {
         var newLocation = locationService.createNewLocation(locationMapper.mapFromDto(locationDto));
         log.info("Create a new location{}", newLocation);
         return ResponseEntity.status(HttpStatus.CREATED).body(locationMapper.mapToDto(newLocation));
     }
 
     @DeleteMapping("/{locationId}")
-    public ResponseEntity<LocationDto> deleteLocation(@PathVariable Long locationId) {
+    public ResponseEntity<LocationDto> deleteLocation(@PathVariable @PositiveOrZero(message = TEMPLATE_MESSAGE_ID_VALIDATION)  Long locationId) {
         var location = locationService.deleteLocation(locationId);
         log.info("Delete a location {}", location);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(locationMapper.mapToDto(location));
     }
 
     @GetMapping("/{locationId}")
-    public ResponseEntity<LocationDto> getLocationById(@PathVariable Long locationId) {
+    public ResponseEntity<LocationDto> getLocationById(@PathVariable @PositiveOrZero(message = TEMPLATE_MESSAGE_ID_VALIDATION) Long locationId) {
         var locationByID = locationService.getLocationByID(locationId);
         log.info("Get a location {}", locationByID);
         return ResponseEntity.status(HttpStatus.OK).body(locationMapper.mapToDto(locationByID));
@@ -53,10 +56,10 @@ public class LocationController {
 
 
     @PutMapping("/{locationId}")
-    public ResponseEntity<LocationDto> updateLocationByID(@PathVariable  Long locationId
-            , @RequestBody LocationDto locationDto) {
+    public ResponseEntity<LocationDto> updateLocationByID(@PathVariable @PositiveOrZero(message = TEMPLATE_MESSAGE_ID_VALIDATION) Long locationId
+            , @RequestBody @Valid LocationDto locationDto) {
         var eventLocation = locationMapper.mapFromDto(locationDto);
-        Location locationUpdate = locationService.updateById(locationId,eventLocation);
+        Location locationUpdate = locationService.updateById(locationId, eventLocation);
         log.info("Update a location {}", locationUpdate);
         return ResponseEntity.status(HttpStatus.OK).body(locationMapper.mapToDto(locationUpdate));
     }

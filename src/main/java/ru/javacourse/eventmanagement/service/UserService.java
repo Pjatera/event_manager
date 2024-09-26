@@ -1,15 +1,15 @@
 package ru.javacourse.eventmanagement.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
-import ru.javacourse.eventmanagement.domain.exeptions.NotFoundUser;
+import ru.javacourse.eventmanagement.db.repository.UserRepository;
 import ru.javacourse.eventmanagement.domain.users.User;
 import ru.javacourse.eventmanagement.domain.users.UserMapper;
-import ru.javacourse.eventmanagement.db.repository.UserRepository;
 
 @Slf4j
 @Service
@@ -21,11 +21,10 @@ public class UserService {
     private final UserMapper userMapper;
 
 
-
     public User getUserByLogin(String username) {
         return userRepository.findByLogin(username)
                 .map(userMapper::mapFromEntity)
-                .orElseThrow(() -> new NotFoundUser("User with username : %s".formatted(username)));
+                .orElseThrow(() -> new EntityNotFoundException("User with username : %s".formatted(username)));
     }
 
 
@@ -41,9 +40,13 @@ public class UserService {
         return userMapper.mapFromEntity(newUserEntity);
     }
 
+    public boolean isExistsByLogin(String login) {
+        return userRepository.existsByLogin(login);
+    }
+
     public User getUserById(Long userId) {
         return userRepository.findById(userId)
                 .map(userMapper::mapFromEntity)
-                .orElseThrow(() -> new NotFoundUser("User with id %s not found".formatted(userId)));
+                .orElseThrow(() -> new EntityNotFoundException("User with id %s not found".formatted(userId)));
     }
 }

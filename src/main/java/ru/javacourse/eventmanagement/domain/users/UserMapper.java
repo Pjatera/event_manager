@@ -1,12 +1,9 @@
 package ru.javacourse.eventmanagement.domain.users;
 
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.ReportingPolicy;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import ru.javacourse.eventmanagement.db.entity.user.UserEntity;
-import ru.javacourse.eventmanagement.web.dto.auth.UserRegistration;
 import ru.javacourse.eventmanagement.web.dto.users.UserDto;
 
 

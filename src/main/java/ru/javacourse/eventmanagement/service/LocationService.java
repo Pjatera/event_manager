@@ -1,5 +1,6 @@
 package ru.javacourse.eventmanagement.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -9,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import ru.javacourse.eventmanagement.db.entity.location.LocationEntity;
 import ru.javacourse.eventmanagement.db.repository.LocationRepository;
-import ru.javacourse.eventmanagement.domain.exeptions.NotFoundLocation;
 import ru.javacourse.eventmanagement.domain.locations.Location;
 import ru.javacourse.eventmanagement.domain.locations.LocationMapper;
 
@@ -55,7 +55,7 @@ public class LocationService {
 
     private LocationEntity getLocationEntityById(@NotNull Long locationId) {
         return locationRepository.findById(locationId)
-                .orElseThrow(() -> new NotFoundLocation("Location with ID %d not found".formatted(locationId)));
+                .orElseThrow(() -> new EntityNotFoundException("Location with ID %d not found".formatted(locationId)));
     }
 
     @Transactional
@@ -65,7 +65,7 @@ public class LocationService {
                                @Valid @NotNull
                                Location location) {
         var locationEntity = locationRepository.findById(locationId)
-                .orElseThrow(() -> new NotFoundLocation("Location with ID %d not found".formatted(locationId)));
+                .orElseThrow(() -> new EntityNotFoundException("Location with ID %d not found".formatted(locationId)));
         isChangingCapacityCorrect(location, locationEntity);
         locationEntity.setName(location.name());
         locationEntity.setAddress(location.address());

@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -30,7 +31,8 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
-                                    FilterChain filterChain) throws ServletException, IOException {
+                                    FilterChain filterChain
+    ) throws ServletException, IOException {
         var bearerToken = request.getHeader(HttpHeaders.AUTHORIZATION);
 
         if (StringUtils.isEmpty(bearerToken) || !bearerToken.startsWith(BEARER_PREFIX)) {
@@ -44,15 +46,16 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             var jwtUserDetails = new JwtUserDetails(user);
             if (jwtService.isValidToken(bearerToken, jwtUserDetails)) {
                 var context = SecurityContextHolder.createEmptyContext();
-                var usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(jwtUserDetails,
+                var token = new UsernamePasswordAuthenticationToken(jwtUserDetails,
                         null,
                         jwtUserDetails.getAuthorities());
-                usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                context.setAuthentication(usernamePasswordAuthenticationToken);
+                token.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                context.setAuthentication(token);
                 SecurityContextHolder.setContext(context);
+            } else {
+                log.error("Jwt token for user with login {} is not valid", login);
+                throw new BadCredentialsException("Jwt token for user with login " + login + " is not valid");
             }
-        } else {
-            log.error("Invalid or expired token from login user : {}", login);
         }
         filterChain.doFilter(request, response);
     }

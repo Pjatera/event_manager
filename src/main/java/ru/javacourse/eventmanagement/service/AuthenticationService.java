@@ -2,6 +2,7 @@ package ru.javacourse.eventmanagement.service;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.javacourse.eventmanagement.web.dto.auth.JwtResponse;
@@ -16,13 +17,17 @@ public class AuthenticationService {
     private final JwtService jwtService;
 
 
-    public JwtResponse authenticateUser(@Valid UserCredentials userCredentials ) {
+    public JwtResponse authenticateUser(@Valid UserCredentials userCredentials) {
         var loginFromUserCredentials = userCredentials.login();
         var passwordFromUserCredentials = userCredentials.password();
+        if (!userService.isExistsByLogin(loginFromUserCredentials)) {
+            throw new BadCredentialsException("User with login %s not found".formatted(loginFromUserCredentials));
+        }
         var user = userService.getUserByLogin(loginFromUserCredentials);
-        if (!passwordEncoder.matches(passwordFromUserCredentials,user.password())) {
-            throw new IllegalArgumentException("Неверный пароль");
+        if (!passwordEncoder.matches(passwordFromUserCredentials, user.password())) {
+            throw new BadCredentialsException("Invalid password");
         }
         return new JwtResponse(jwtService.generateAccessToken(new JwtUserDetails(user), user.id()));
     }
+
 }
