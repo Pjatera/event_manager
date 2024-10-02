@@ -15,7 +15,6 @@ public record Location(
         @NotBlank(message = "address not be empty")
         @Length(max = 255, message = "Address length must be smaller than 255 symbols")
         String address,
-        @NotNull(message = "capacity not be empty!")
         @Min(value = 5, message = "the capacity must be greater than 5")
         int capacity,
         @Length(max = 255, message = "Description length must be smaller than 255 symbols")

@@ -5,8 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.proxy.HibernateProxy;
+import ru.javacourse.eventmanagement.db.entity.event.EventEntity;
 
+import java.util.LinkedHashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Data
 @Entity
@@ -25,6 +28,7 @@ public class LocationEntity {
     private int capacity;
     @Column(name = "description")
     private String description;
+
 
     @Override
     public final boolean equals(Object o) {
