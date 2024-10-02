@@ -1,10 +1,11 @@
-package ru.javacourse.eventmanagement.service;
+package ru.javacourse.eventmanagement.service.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import ru.javacourse.eventmanagement.service.properties.JwtProperties;
@@ -27,12 +28,11 @@ public class JwtService {
     }
 
 
-    public boolean isValidToken(String token, UserDetails userDetails) {
+    public boolean isValidToken(String token) {
         var claims = getClaims(token);
-        String login = claims.getSubject();
         Instant expiration = claims.getExpiration().toInstant();
         Instant now = Instant.now();
-        return expiration.isAfter(now) && login.equals(userDetails.getUsername());
+        return expiration.isAfter(now);
     }
 
 
@@ -48,10 +48,13 @@ public class JwtService {
     public String generateAccessToken(UserDetails userDetails, Long userId) {
         Instant nowDate = Instant.now();
         Instant expirationDate = nowDate.plus(Duration.ofMillis(jwtProperties.getAccess()));
+        var collectAuthority = userDetails.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .toList();
         return Jwts.builder()
                 .subject(userDetails.getUsername())
                 .claim("id", userId)
-                .claim("roles", userDetails.getAuthorities())
+                .claim("roles", collectAuthority)
                 .issuedAt(Date.from(nowDate))
                 .expiration(Date.from(expirationDate))
                 .signWith(key)
@@ -66,4 +69,3 @@ public class JwtService {
 
 
 }
-

@@ -1333,8 +1333,8 @@ components:
     UserCredentials:
       description: Данные для авторизации пользователя. Для получения JWT-токена
       example:
-        login: user_login
-        password: userpassword
+        login: user123
+        password: password
       properties:
         login:
           description: Логин пользователя для авторизации
@@ -1349,7 +1349,7 @@ components:
     EventDto:
       example:
         occupiedPlaces: 15
-        date: 2000-01-23T04:56:07.000+00:00
+        date: 2025-01-23T04:56:07.000
         duration: 60
         cost: 1200
         maxPlaces: 10
@@ -1426,7 +1426,7 @@ components:
     EventCreateRequestDto:
       description: Объект с данными для создания нового мероприятия.
       example:
-        date: 2000-01-23T04:56:07.000+00:00
+        date: 2025-01-23T04:56:07.000
         duration: 60
         cost: 1200
         maxPlaces: 10
@@ -1470,7 +1470,7 @@ components:
     EventUpdateRequestDto:
       description: Объект с данными для обновления мероприятия
       example:
-        date: 2000-01-23T04:56:07.000+00:00
+        date: 2025-01-23T04:56:07.000
         duration: 60
         cost: 3000
         maxPlaces: 100
@@ -1511,17 +1511,17 @@ components:
       description: "Фильтр для поиска мероприятий. Обязательных полей нет. Если вс\
         е поля не заданы, то должен вернуться список всех мероприятий"
       example:
-        durationMax: 120
-        dateStartBefore: 2000-01-23T04:56:07.000+00:00
+        durationMax: 320
+        dateStartBefore: 2025-12-23T04:56:07.000
         placesMin: 10
-        locationId: 5
-        eventStatus: WAIT_START
-        name: Лекция
+        locationId: 2
+        eventStatus: FINISHED
+        name: Full-Stack
         placesMax: 100
-        costMin: 1000
-        dateStartAfter: 2000-01-23T04:56:07.000+00:00
+        costMin: 100
+        dateStartAfter: 2024-01-23T04:56:07.000
         costMax: 5000
-        durationMin: 60
+        durationMin: 2
       properties:
         name:
           description: Имя мероприятия для поиска

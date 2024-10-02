@@ -5,6 +5,10 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Null;
 import org.hibernate.validator.constraints.Length;
+import ru.javacourse.eventmanagement.db.entity.event.EventEntity;
+import ru.javacourse.eventmanagement.domain.event.Event;
+
+import java.util.Set;
 
 public record Location(
         @Null(message = "For a new EventLocation, the ID must be empty")

@@ -1,4 +1,4 @@
-package ru.javacourse.eventmanagement.web.dto.auth;
+package ru.javacourse.eventmanagement.domain.mapper;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -6,14 +6,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import ru.javacourse.eventmanagement.domain.users.Role;
 import ru.javacourse.eventmanagement.domain.users.User;
+import ru.javacourse.eventmanagement.web.dto.auth.UserRegistration;
 
 @Component
 @RequiredArgsConstructor
 public class UserRegistrationMapper {
     private final PasswordEncoder passwordEncoder;
 
-
-    public User mapFromUserRegistration(@Valid UserRegistration userRegistration) {
+    public User mapFromUserRegistrationToUser(@Valid UserRegistration userRegistration) {
 
         return new User(
                 null,

@@ -1,11 +1,9 @@
-package ru.javacourse.eventmanagement.web.dto.event;
-
-import ru.javacourse.eventmanagement.domain.event.EventStatus;
+package ru.javacourse.eventmanagement.domain.event;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-public record EventSearchRequestDto(
+public record EventSearchRequest(
         String name,
         Integer placesMin,
         Integer placesMax,

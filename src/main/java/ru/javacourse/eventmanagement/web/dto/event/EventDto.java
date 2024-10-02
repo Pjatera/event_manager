@@ -3,6 +3,7 @@ package ru.javacourse.eventmanagement.web.dto.event;
 import jakarta.validation.constraints.*;
 import ru.javacourse.eventmanagement.domain.event.EventStatus;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public record EventDto(
@@ -25,7 +26,7 @@ public record EventDto(
         LocalDateTime date,
 
         @PositiveOrZero(message = "Cost must not be negative")
-        int cost,
+        BigDecimal cost,
 
         @Min(value = 30, message = "Duration must be at least 30 minutes")
         int duration,

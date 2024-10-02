@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.javacourse.eventmanagement.service.AuthenticationService;
+import ru.javacourse.eventmanagement.service.security.AuthenticationService;
 import ru.javacourse.eventmanagement.web.dto.auth.JwtResponse;
 import ru.javacourse.eventmanagement.web.dto.auth.UserCredentials;
 

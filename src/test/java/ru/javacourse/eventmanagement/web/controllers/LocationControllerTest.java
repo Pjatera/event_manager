@@ -1,4 +1,4 @@
-package ru.javacourse.eventmanagement.locations;
+package ru.javacourse.eventmanagement.web.controllers;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,15 +14,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import ru.javacourse.eventmanagement.db.entity.location.LocationEntity;
 import ru.javacourse.eventmanagement.db.repository.LocationRepository;
 import ru.javacourse.eventmanagement.domain.locations.Location;
-import ru.javacourse.eventmanagement.domain.locations.LocationMapper;
+import ru.javacourse.eventmanagement.domain.mapper.LocationMapper;
 import ru.javacourse.eventmanagement.web.dto.locations.LocationDto;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.InstanceOfAssertFactories.COLLECTION;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -53,18 +51,20 @@ class LocationControllerTest {
                 "Ледовый дворец",
                 "г. СПб, Пятилеток 1",
                 12300,
-                "Спортивно-концертный комплекс в Санкт-Петербурге");
+                "Спортивно-концертный комплекс в Санкт-Петербурге",
+                Collections.EMPTY_SET);
         var grandHall = new LocationEntity(43L,
                 "Grand Hall",
                 "123 Main St, Springfield",
                 500,
-                "A large event hall suitable for conferences and banquets.");
+                "A large event hall suitable for conferences and banquets.",
+                Collections.EMPTY_SET);
         eventLocationEntities.add(icePalace);
         eventLocationEntities.add(grandHall);
 
         this.firstEntity = icePalace;
-        this.locationCheck = locationMapper.mapFromEntity(icePalace);
-        this.locationDtoCheck = locationMapper.mapToDto(locationCheck);
+        this.locationCheck = locationMapper.mapFromEntityToLocation(icePalace);
+        this.locationDtoCheck = locationMapper.mapLocationToDto(locationCheck);
         objectMapper.configure(JsonGenerator.Feature.ESCAPE_NON_ASCII, true);
     }
 
@@ -85,7 +85,7 @@ class LocationControllerTest {
                 .getResponse()
                 .getContentAsString();
         var listResult = Arrays.asList(objectMapper.readValue(contentAsString, LocationDto[].class));
-        var listDtoCheck = eventLocationEntities.stream().map(locationMapper::mapFromEntity).map(locationMapper::mapToDto).toList();
+        var listDtoCheck = eventLocationEntities.stream().map(locationMapper::mapFromEntityToLocation).map(locationMapper::mapLocationToDto).toList();
 
         assertThat(listResult.getFirst()).isEqualTo(listDtoCheck.getFirst());
         verify(locationRepository, times(1)).findAll();
@@ -138,8 +138,8 @@ class LocationControllerTest {
                 .getResponse()
                 .getContentAsString();
         var locationDtoResponse = objectMapper.readValue(contentAsString, LocationDto.class);
-        var location = locationMapper.mapFromEntity(firstEntity);
-        var locationDtoTarget = locationMapper.mapToDto(location);
+        var location = locationMapper.mapFromEntityToLocation(firstEntity);
+        var locationDtoTarget = locationMapper.mapLocationToDto(location);
         assertThat(locationDtoResponse).isEqualTo(locationDtoTarget);
         verify(locationRepository, times(1)).findById(locationId);
     }

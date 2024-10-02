@@ -6,12 +6,16 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.proxy.HibernateProxy;
 import ru.javacourse.eventmanagement.db.entity.location.LocationEntity;
+import ru.javacourse.eventmanagement.db.entity.user.UserEntity;
 import ru.javacourse.eventmanagement.domain.event.EventStatus;
 
-import java.time.Instant;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.Set;
 
 @Data
 @Entity
@@ -29,24 +33,21 @@ public class EventEntity {
     private String name;
 
     @NotNull
-    @Column(name = "owner_id", nullable = false)
-    private Long ownerId;
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "owner_id", nullable = false)
+    private UserEntity ownerUser;
 
     @NotNull
     @Column(name = "max_places", nullable = false)
     private Integer maxPlaces;
 
     @NotNull
-    @Column(name = "occupied_places", nullable = false)
-    private Integer occupiedPlaces;
-
-    @NotNull
     @Column(name = "date", nullable = false)
-    private Instant date;
+    private LocalDateTime date;
 
     @NotNull
     @Column(name = "cost", nullable = false)
-    private Integer cost;
+    private BigDecimal cost;
 
     @NotNull
     @Column(name = "duration", nullable = false)
@@ -60,6 +61,12 @@ public class EventEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private EventStatus status;
+
+    @ToString.Exclude
+    @OneToMany (mappedBy ="event", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<RegistrationEntity> eventsRegistrationEntities;
+
+
 
 
     @Override

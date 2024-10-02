@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.List;
 
 @RequiredArgsConstructor
-public class JwtUserDetails implements UserDetails {
+public class UserDetailsImpl implements UserDetails {
     private final User user;
 
 
@@ -29,5 +29,8 @@ public class JwtUserDetails implements UserDetails {
         return user.login();
     }
 
+    public User getUser() {
+        return user;
+    }
 
 }

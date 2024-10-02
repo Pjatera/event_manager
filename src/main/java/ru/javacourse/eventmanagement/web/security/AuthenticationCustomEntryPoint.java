@@ -1,4 +1,4 @@
-package ru.javacourse.eventmanagement.web.dto.auth;
+package ru.javacourse.eventmanagement.web.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;

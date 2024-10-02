@@ -4,10 +4,10 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.hibernate.proxy.HibernateProxy;
 import ru.javacourse.eventmanagement.db.entity.event.EventEntity;
 
-import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -29,6 +29,9 @@ public class LocationEntity {
     @Column(name = "description")
     private String description;
 
+    @OneToMany(mappedBy = "location", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ToString.Exclude
+    private Set<EventEntity> events;
 
     @Override
     public final boolean equals(Object o) {

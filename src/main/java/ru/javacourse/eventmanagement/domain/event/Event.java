@@ -1,19 +1,19 @@
 package ru.javacourse.eventmanagement.domain.event;
 
-import jakarta.validation.constraints.*;
-
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 public record Event(
         Long id,
         String name,
         Long ownerId,
         int maxPlaces,
-        int occupiedPlaces,
         LocalDateTime date,
-        int cost,
+        BigDecimal cost,
         int duration,
         Long locationId,
-        EventStatus status
+        EventStatus status,
+        Set<Registration> registrations
 ) {
 }

@@ -4,6 +4,7 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Null;
 import jakarta.validation.constraints.Size;
+import ru.javacourse.eventmanagement.db.entity.event.EventEntity;
 
 import java.io.Serializable;
 
@@ -29,4 +30,5 @@ public record User(
                ", role=" + role +
                '}';
     }
+
 }

@@ -1,4 +1,4 @@
-package ru.javacourse.eventmanagement.locations;
+package ru.javacourse.eventmanagement.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolationException;
@@ -8,12 +8,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestConstructor;
-import ru.javacourse.eventmanagement.domain.locations.Location;
 import ru.javacourse.eventmanagement.db.entity.location.LocationEntity;
 import ru.javacourse.eventmanagement.db.repository.LocationRepository;
-import ru.javacourse.eventmanagement.service.LocationService;
+import ru.javacourse.eventmanagement.domain.locations.Location;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,12 +39,14 @@ class LocationServiceTest {
                 "Ледовый дворец",
                 "г. СПб, Пятилеток 1",
                 12300,
-                "Спортивно-концертный комплекс в Санкт-Петербурге");
+                "Спортивно-концертный комплекс в Санкт-Петербурге",
+                Collections.EMPTY_SET);
         var grandHall = new LocationEntity(43L,
                 "Grand Hall",
                 "123 Main St, Springfield",
                 500,
-                "A large event hall suitable for conferences and banquets.");
+                "A large event hall suitable for conferences and banquets.",
+                Collections.EMPTY_SET);
         eventLocationEntities.add(icePalace);
         eventLocationEntities.add(grandHall);
     }
@@ -67,7 +69,8 @@ class LocationServiceTest {
         var eventLocationEntity = new LocationEntity(44L, "Sunny Conference Room",
                 "456 Ocean Drive, Seaside Town",
                 50,
-                "A bright and airy conference room with a stunning ocean view, ideal for medium-sized meetings.");
+                "A bright and airy conference room with a stunning ocean view, ideal for medium-sized meetings.",
+                Collections.EMPTY_SET);
         var eventLocationSource = new Location(44L, "Sunny Conference Room",
                 "456 Ocean Drive, Seaside Town",
                 50,

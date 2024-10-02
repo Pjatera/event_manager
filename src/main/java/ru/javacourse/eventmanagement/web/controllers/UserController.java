@@ -7,10 +7,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.javacourse.eventmanagement.domain.users.UserMapper;
+import ru.javacourse.eventmanagement.domain.mapper.UserMapper;
+import ru.javacourse.eventmanagement.domain.mapper.UserRegistrationMapper;
 import ru.javacourse.eventmanagement.service.UserService;
 import ru.javacourse.eventmanagement.web.dto.auth.UserRegistration;
-import ru.javacourse.eventmanagement.web.dto.auth.UserRegistrationMapper;
 import ru.javacourse.eventmanagement.web.dto.users.UserDto;
 
 @RestController
@@ -25,11 +25,11 @@ public class UserController {
     @PostMapping()
     public ResponseEntity<UserDto> registerUser(@RequestBody @Valid UserRegistration userRegistration) {
         log.info("Start of registration user with login: {}", userRegistration.login());
-        var newUser = userRegistrationMapper.mapFromUserRegistration(userRegistration);
+        var newUser = userRegistrationMapper.mapFromUserRegistrationToUser(userRegistration);
         var createdUser = userService.registerUser(newUser);
         log.info("User registration was successful with login: {} ,it is assigned an ID: {}", userRegistration.login(), createdUser.id());
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(userMapper.mapToDto(createdUser));
+        return ResponseEntity.status(HttpStatus.CREATED).body(userMapper.mapFromUserToDto(createdUser));
     }
 
     @GetMapping("/{userId}")
@@ -37,8 +37,7 @@ public class UserController {
         log.info("A request was received to obtain a user by his ID {}", userId);
         var userById = userService.getUserById(userId);
         log.info("User with ID {} was successfully obtained", userId);
-        return ResponseEntity.status(HttpStatus.OK).body(userMapper.mapToDto(userById));
+        return ResponseEntity.status(HttpStatus.OK).body(userMapper.mapFromUserToDto(userById));
     }
-
 
 }

@@ -1,11 +1,15 @@
 spring:
   application:
     name: event-management
-  jpa.hibernate:
+  jpa:
+    open-in-view: false
+    hibernate:
       ddl-auto: validate
-      show-sql: true
-      format_sql: true
-      dialect: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: false
+
   datasource:
     url: jdbc:postgresql://localhost:5435/postgres
     username: postgres
@@ -18,8 +22,6 @@ spring:
       continue-on-error: false
       schema-locations: classpath:schema.sql
       data-locations: classpath:demo_data.sql
-
-
 springdoc:
   swagger-ui:
     url: /openapi.yaml
@@ -32,3 +34,6 @@ security:
   jwt:
     secret: 0JzQsNC80LAg0LzRi9C70LAg0YDQsNC80YMs0LAg0JrQsNGA0Lsg0YMg0JrQu9Cw0YDRiyDRg9C60YDQsNC7INC60L7RgNCw0LvRiw==
     access: 3600000
+event:
+  status:
+    cron: 0 */1 * * * *

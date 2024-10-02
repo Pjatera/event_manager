@@ -1,4 +1,4 @@
-package ru.javacourse.eventmanagement.web.security;
+package ru.javacourse.eventmanagement.service.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ru.javacourse.eventmanagement.service.UserService;
+import ru.javacourse.eventmanagement.web.security.UserDetailsImpl;
 
 @RequiredArgsConstructor
 @Service
@@ -17,8 +18,6 @@ public class JwtUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return new JwtUserDetails(userService.getUserByLogin(username));
-
-
+        return new UserDetailsImpl(userService.getUserByLogin(username));
     }
 }

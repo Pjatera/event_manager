@@ -4,8 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,12 +12,12 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
+import ru.javacourse.eventmanagement.domain.mapper.UserRegistrationMapper;
 import ru.javacourse.eventmanagement.domain.users.Role;
 import ru.javacourse.eventmanagement.domain.users.User;
-import ru.javacourse.eventmanagement.domain.users.UserMapper;
+import ru.javacourse.eventmanagement.domain.mapper.UserMapper;
 import ru.javacourse.eventmanagement.service.UserService;
 import ru.javacourse.eventmanagement.web.dto.auth.UserRegistration;
-import ru.javacourse.eventmanagement.web.dto.auth.UserRegistrationMapper;
 import ru.javacourse.eventmanagement.web.dto.users.UserDto;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -41,11 +39,10 @@ class UserControllerTest {
 
     @MockBean
     private UserMapper userMapper;
+    @MockBean
+    private UserRegistrationMapper userRegistrationMapper;
     @Autowired
     private ObjectMapper objectMapper;
-
-    @Mock
-    private UserRegistrationMapper userRegistrationMapper;
 
     private UserRegistration userRegistration;
     private User user;
@@ -71,9 +68,9 @@ class UserControllerTest {
     @SneakyThrows
     void registerUser_ShouldReturnCreatedUser() {
 
-        when(userRegistrationMapper.mapFromUserRegistration(any(UserRegistration.class))).thenReturn(user);
+        when(userRegistrationMapper.mapFromUserRegistrationToUser(any(UserRegistration.class))).thenReturn(user);
         when(userService.registerUser(any(User.class))).thenReturn(user);
-        when(userMapper.mapToDto(any(User.class))).thenReturn(userDto);
+        when(userMapper.mapFromUserToDto(any(User.class))).thenReturn(userDto);
 
 
         mockMvc.perform(post("/users")
@@ -92,14 +89,14 @@ class UserControllerTest {
     void getUserById_ShouldReturnUserWithStatus401() {
         long userId = 1L;
         when(userService.getUserById(userId)).thenReturn(user);
-        when(userMapper.mapToDto(any(User.class))).thenReturn(userDto);
+        when(userMapper.mapFromUserToDto(any(User.class))).thenReturn(userDto);
 
         mockMvc.perform(get("/users/{userId}", userId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnauthorized());
 
         verify(userService,never()).getUserById(userId);
-        verify(userMapper, never()).mapToDto(any(User.class));
+        verify(userMapper, never()).mapFromUserToDto(any(User.class));
     }
     @Test
     @SneakyThrows
@@ -107,14 +104,14 @@ class UserControllerTest {
     void getUserById_ShouldReturnUserWithStatus403() {
         long userId = 1L;
         when(userService.getUserById(userId)).thenReturn(user);
-        when(userMapper.mapToDto(any(User.class))).thenReturn(userDto);
+        when(userMapper.mapFromUserToDto(any(User.class))).thenReturn(userDto);
 
         mockMvc.perform(get("/users/{userId}", userId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isForbidden());
 
         verify(userService,never()).getUserById(userId);
-        verify(userMapper, never()).mapToDto(any(User.class));
+        verify(userMapper, never()).mapFromUserToDto(any(User.class));
     }
 
     @Test
@@ -123,7 +120,7 @@ class UserControllerTest {
     void getUserById_ShouldReturnUserWithStatusCreated() {
         long userId = 1L;
         when(userService.getUserById(userId)).thenReturn(user);
-        when(userMapper.mapToDto(any(User.class))).thenReturn(userDto);
+        when(userMapper.mapFromUserToDto(any(User.class))).thenReturn(userDto);
 
 
         var contentAsString = mockMvc.perform(get("/users/{userId}", userId)
@@ -141,7 +138,6 @@ class UserControllerTest {
         assertThat(userDtoResponse).isEqualTo(userDto);
 
         verify(userService, times(1)).getUserById(userId);
-        verify(userMapper, times(1)).mapToDto(any(User.class));
+        verify(userMapper, times(1)).mapFromUserToDto(any(User.class));
     }
-
 }

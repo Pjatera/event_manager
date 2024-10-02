@@ -7,9 +7,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.proxy.HibernateProxy;
+import ru.javacourse.eventmanagement.db.entity.event.EventEntity;
+import ru.javacourse.eventmanagement.db.entity.event.RegistrationEntity;
 import ru.javacourse.eventmanagement.domain.users.Role;
 
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Data
@@ -33,6 +37,14 @@ public class UserEntity {
     @Column(name = "role")
     private Role role;
 
+    @OneToMany(mappedBy = "ownerUser", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ToString.Exclude
+    private Set<EventEntity> events=new HashSet<>();
+
+    @ToString.Exclude
+    @OneToMany (mappedBy ="user", fetch = FetchType.LAZY, cascade = CascadeType.ALL,orphanRemoval = true)
+    private Set<RegistrationEntity> eventsRegistrationEntities;
+
     @Override
     public final boolean equals(Object o) {
         if (this == o) return true;
@@ -48,5 +60,6 @@ public class UserEntity {
     public final int hashCode() {
         return this instanceof HibernateProxy hProxyThis ? hProxyThis.getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
     }
+
 
 }
