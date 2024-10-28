@@ -10,7 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
-import ru.javacourse.eventmanagement.domain.exeptions.CustomErrorMessage;
+import ru.javacourse.eventmanagement.domain.exeptions.ErrorMessageResponse;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -28,7 +28,7 @@ public class AuthenticationCustomEntryPoint implements AuthenticationEntryPoint 
             AuthenticationException authException
     ) throws IOException, ServletException {
         log.error("Authentication Failed", authException);
-        var authenticationFailed = new CustomErrorMessage(
+        var authenticationFailed = new ErrorMessageResponse(
                 "Authentication Failed",
                 authException.getMessage(),
                 LocalDateTime.now());

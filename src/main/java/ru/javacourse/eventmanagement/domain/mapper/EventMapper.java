@@ -5,16 +5,12 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.ReportingPolicy;
 import ru.javacourse.eventmanagement.db.entity.event.EventEntity;
-import ru.javacourse.eventmanagement.db.entity.event.RegistrationEntity;
 import ru.javacourse.eventmanagement.domain.event.Event;
-import ru.javacourse.eventmanagement.domain.event.Registration;
 import ru.javacourse.eventmanagement.web.dto.event.EventCreateRequestDto;
 import ru.javacourse.eventmanagement.web.dto.event.EventDto;
-import ru.javacourse.eventmanagement.web.dto.event.EventUpdateRequestDto;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Mapper(unmappedSourcePolicy = ReportingPolicy.IGNORE,
         componentModel = MappingConstants.ComponentModel.SPRING,

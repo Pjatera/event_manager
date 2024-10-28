@@ -9,7 +9,6 @@ spring:
     properties:
       hibernate:
         format_sql: false
-
   datasource:
     url: jdbc:postgresql://localhost:5435/postgres
     username: postgres
@@ -18,13 +17,21 @@ spring:
 
   sql:
     init:
-      mode:  always
+      mode: always
       continue-on-error: false
       schema-locations: classpath:schema.sql
       data-locations: classpath:demo_data.sql
+
+  kafka:
+    bootstrap-servers: localhost::9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
 springdoc:
   swagger-ui:
     url: /openapi.yaml
+
 server:
   port: 8081
   servlet:
@@ -34,6 +41,7 @@ security:
   jwt:
     secret: 0JzQsNC80LAg0LzRi9C70LAg0YDQsNC80YMs0LAg0JrQsNGA0Lsg0YMg0JrQu9Cw0YDRiyDRg9C60YDQsNC7INC60L7RgNCw0LvRiw==
     access: 3600000
+
 event:
   status:
     cron: 0 */1 * * * *

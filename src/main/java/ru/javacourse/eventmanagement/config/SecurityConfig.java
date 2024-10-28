@@ -42,8 +42,6 @@ public class SecurityConfig {
     @SneakyThrows
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) {
         return configuration.getAuthenticationManager();
-
-
     }
 
 
