@@ -60,34 +60,47 @@ public interface EventRepository extends JpaRepository<EventEntity, Long>, JpaSp
             """)
     List<EventEntity> findRegistrationEventsByUser(String login);
 
+
     @Modifying
     @Transactional
+    @Query("update EventEntity e set e.status = :status where e.id in :id")
+    void changeEventStatus(EventStatus status, Long... id);
+
     @Query("""
-            UPDATE EventEntity e SET e.status=:starting 
-            WHERE e.date <= CURRENT_TIMESTAMP
-            AND e.status =:verifiableStatus
+              SELECT e FROM EventEntity e 
+              LEFT JOIN FETCH e.ownerUser u 
+              LEFT JOIN FETCH e.eventsRegistrationEntities r
+              LEFT JOIN r.user us
+              WHERE e.date <= CURRENT_TIMESTAMP
+              AND e.status =:eventStart
             """)
-    int checkingAndUpdatingTheStatusOfStartedEvents(EventStatus verifiableStatus, EventStatus starting);
-
-    @Modifying
-    @Transactional
-    @Query(value = """
-            UPDATE events e SET status =:finishedStatus
-            WHERE (e.date + INTERVAL '1 minute' * e.duration < CURRENT_TIMESTAMP)
-            AND e.status =:verifiableStatus
-            """,nativeQuery = true)
-    int checkingAndUpdatingTheStatusOfFinishedEvents(String verifiableStatus, String finishedStatus);
-
+    List<EventEntity> findEventWithStatusOfStartedEvents(EventStatus eventStart);
 
     @Query(value = """
-    SELECT (COUNT(e) > 0) 
-    FROM events e 
-    WHERE (e.date <= :date  AND (e.date + INTERVAL '1 minute' * e.duration) >= :date) 
-       OR ( e.date <= CAST(:date as date) + INTERVAL '1 minute' * :duration 
-                AND e.date + INTERVAL '1 minute' * e.duration >= CAST(:date as date) + INTERVAL '1 minute' * :duration )
-    """, nativeQuery = true)
+                SELECT e.id FROM events e
+                WHERE e.date + INTERVAL '1 minute' * e.duration < CURRENT_TIMESTAMP
+                AND e.status = :eventStart
+            """, nativeQuery = true)
+    List<Long> findEventWithStatusOfFinishedEvents(String eventStart);
+
+    @Query("""
+            select e from EventEntity e
+            LEFT JOIN FETCH e.ownerUser u 
+            LEFT JOIN FETCH e.eventsRegistrationEntities r
+            LEFT JOIN r.user us
+            where e.id in :ids
+            """)
+    List<EventEntity> findAllEntityWithId(Long... ids);
+
+
+    @Query(value = """
+            SELECT (COUNT(e) > 0) 
+            FROM events e 
+            WHERE (e.date <= :date  AND (e.date + INTERVAL '1 minute' * e.duration) >= :date) 
+               OR ( e.date <= CAST(:date as date) + INTERVAL '1 minute' * :duration 
+                        AND e.date + INTERVAL '1 minute' * e.duration >= CAST(:date as date) + INTERVAL '1 minute' * :duration )
+            """, nativeQuery = true)
     boolean hasEventInTimeFrame(LocalDateTime date, int duration);
-
 
 
 }

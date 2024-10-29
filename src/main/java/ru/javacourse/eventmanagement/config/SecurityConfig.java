@@ -11,7 +11,6 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -45,7 +44,6 @@ public class SecurityConfig {
     }
 
 
-
     @Bean
     @SneakyThrows
     public SecurityFilterChain securityConfigure(HttpSecurity http) {
@@ -60,7 +58,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorizeHttpRequests -> authorizeHttpRequests
                         .requestMatchers("/users", "/users/auth").permitAll()
                         .requestMatchers(HttpMethod.GET, "/users/*").hasRole(ROLE_ADMIN)
-                        .requestMatchers(HttpMethod.GET, "/locations").hasAnyRole(ROLE_ADMIN,ROLE_USER)
+                        .requestMatchers(HttpMethod.GET, "/locations").hasAnyRole(ROLE_ADMIN, ROLE_USER)
                         .requestMatchers(HttpMethod.POST, "/locations").hasRole(ROLE_ADMIN)
                         .requestMatchers(HttpMethod.DELETE, "/locations/*").hasRole(ROLE_ADMIN)
                         .requestMatchers(HttpMethod.GET, "/locations/*").hasAnyRole(ROLE_ADMIN, ROLE_USER)

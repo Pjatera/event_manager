@@ -1,4 +1,4 @@
-package ru.javacourse.eventmanagement.service;
+package ru.javacourse.eventmanagement.domain.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;

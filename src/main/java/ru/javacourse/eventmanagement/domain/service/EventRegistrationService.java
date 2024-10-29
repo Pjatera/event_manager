@@ -1,4 +1,4 @@
-package ru.javacourse.eventmanagement.service;
+package ru.javacourse.eventmanagement.domain.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -11,7 +11,7 @@ import ru.javacourse.eventmanagement.domain.event.Event;
 import ru.javacourse.eventmanagement.domain.event.EventStatus;
 import ru.javacourse.eventmanagement.domain.mapper.EventMapper;
 import ru.javacourse.eventmanagement.domain.mapper.UserMapper;
-import ru.javacourse.eventmanagement.service.security.AuthenticationService;
+import ru.javacourse.eventmanagement.domain.service.security.AuthenticationService;
 
 @Service
 @RequiredArgsConstructor

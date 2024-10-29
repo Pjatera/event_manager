@@ -1,4 +1,4 @@
-package ru.javacourse.eventmanagement.service.properties;
+package ru.javacourse.eventmanagement.domain.service.security.properties;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

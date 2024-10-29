@@ -14,8 +14,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import ru.javacourse.eventmanagement.service.UserService;
-import ru.javacourse.eventmanagement.service.security.JwtService;
+import ru.javacourse.eventmanagement.domain.service.UserService;
+import ru.javacourse.eventmanagement.domain.service.security.JwtService;
 
 import java.io.IOException;
 

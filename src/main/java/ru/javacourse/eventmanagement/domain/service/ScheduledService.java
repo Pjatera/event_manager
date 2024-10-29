@@ -1,4 +1,4 @@
-package ru.javacourse.eventmanagement.service;
+package ru.javacourse.eventmanagement.domain.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
