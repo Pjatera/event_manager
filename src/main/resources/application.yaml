@@ -23,10 +23,14 @@ spring:
       data-locations: classpath:demo_data.sql
 
   kafka:
-    bootstrap-servers: localhost::9092
+    bootstrap-servers: localhost:9092
     producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      acks: all
+      properties:
+       delivery.timeout.ms: 40000
+       linger.ms: 0
+       request.timeout.ms: 10000
+       max.in.flight.request.per.connection: 3
 
 springdoc:
   swagger-ui:

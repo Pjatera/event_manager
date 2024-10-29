@@ -11,6 +11,7 @@ import org.springframework.test.context.TestConstructor;
 import ru.javacourse.eventmanagement.db.entity.location.LocationEntity;
 import ru.javacourse.eventmanagement.db.repository.LocationRepository;
 import ru.javacourse.eventmanagement.domain.locations.Location;
+import ru.javacourse.eventmanagement.domain.service.LocationService;
 
 import java.util.ArrayList;
 import java.util.Collections;

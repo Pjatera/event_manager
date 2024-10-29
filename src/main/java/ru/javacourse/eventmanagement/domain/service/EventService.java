@@ -1,4 +1,4 @@
-package ru.javacourse.eventmanagement.service;
+package ru.javacourse.eventmanagement.domain.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -15,7 +15,7 @@ import ru.javacourse.eventmanagement.domain.locations.Location;
 import ru.javacourse.eventmanagement.domain.mapper.EventMapper;
 import ru.javacourse.eventmanagement.domain.mapper.LocationMapper;
 import ru.javacourse.eventmanagement.domain.mapper.UserMapper;
-import ru.javacourse.eventmanagement.service.security.AuthenticationService;
+import ru.javacourse.eventmanagement.domain.service.security.AuthenticationService;
 import ru.javacourse.eventmanagement.web.dto.event.EventCreateRequestDto;
 import ru.javacourse.eventmanagement.web.dto.event.EventSearchRequestDto;
 import ru.javacourse.eventmanagement.web.dto.event.EventUpdateRequestDto;
@@ -35,6 +35,7 @@ public class EventService {
     private final LocationService locationService;
     private final LocationMapper locationMapper;
     private final AuthenticationService authenticationService;
+    private final KafkaEventSentService kafkaEventSentService;
 
 
     @Transactional
@@ -67,6 +68,7 @@ public class EventService {
             if (eventEntity.getStatus() != EventStatus.WAIT_START) {
                 throw new IllegalArgumentException("The event cannot be canceled");
             }
+            kafkaEventSentService.sendMessageDeleteEvent(eventEntity);
             eventEntity.setStatus(EventStatus.CANCELLED);
         } else {
             throw new IllegalArgumentException("User is not allowed to delete this event");
@@ -92,6 +94,7 @@ public class EventService {
             if (eventRepository.hasEventInTimeFrame(eventDtoUpdate.date(), duration)) {
                 throw new IllegalArgumentException("It is impossible to hold the event because the time is busy");
             }
+            var eventChangeKafkaMessage = kafkaEventSentService.createEventChangeKafkaMessage(eventEntity, eventDtoUpdate);
             Optional.ofNullable(eventDtoUpdate.name()).ifPresent(eventEntity::setName);
             Optional.ofNullable(eventDtoUpdate.date()).ifPresent(eventEntity::setDate);
             eventEntity.setDuration(duration);
@@ -99,6 +102,7 @@ public class EventService {
             Optional.ofNullable(eventDtoUpdate.maxPlaces()).ifPresent(eventEntity::setMaxPlaces);
             eventEntity.setLocation(locationMapper.mapFromLocationToEntity(location));
             eventRepository.save(eventEntity);
+            kafkaEventSentService.kafkaSendMessage(eventChangeKafkaMessage);
         } else {
             var user = authenticationService.getCurrentUserAuthenticated().getUser();
             log.error("User with login {} is not the event creator", user.login());
@@ -130,6 +134,7 @@ public class EventService {
                 .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"));
     }
 
+
     private boolean isNotValidUpdate(EventEntity eventEntity, EventUpdateRequestDto eventDtoUpdate, Location location) {
         var occupiedPlaces = eventEntity.getEventsRegistrationEntities().size();
         int maxPlacesUpdate = Optional.ofNullable(eventDtoUpdate.maxPlaces()).orElse(eventEntity.getMaxPlaces());
@@ -158,11 +163,35 @@ public class EventService {
     @Transactional
     public void performTaskWithUpdateEventStatus() {
         log.info("Checking event status");
+        var eventUpdateStarted = eventRepository.findEventWithStatusOfStartedEvents(EventStatus.WAIT_START);
+        var sizeForUpdateStatusStarted = eventUpdateStarted.size();
+        if (sizeForUpdateStatusStarted > 0) {
+            var longs = eventUpdateStarted.stream()
+                    .map(EventEntity::getId)
+                    .toList()
+                    .toArray(Long[]::new);
+            eventRepository.changeEventStatus(EventStatus.STARTED, longs);
+            eventUpdateStarted.forEach(eventEntity -> {
+                        var eventChangeKafkaMessage = kafkaEventSentService.createEventChangeKafkaMessage(eventEntity, EventStatus.WAIT_START, EventStatus.STARTED);
+                        kafkaEventSentService.kafkaSendMessage(eventChangeKafkaMessage);
+                    }
+            );
+            log.info("{} events have their status changed to {}", sizeForUpdateStatusStarted, EventStatus.STARTED);
+        }
+        var listIdUpdateFinished = eventRepository.findEventWithStatusOfFinishedEvents(EventStatus.STARTED.toString());
+        var sizeForUpdateStatusFinished = listIdUpdateFinished.size();
+        if (sizeForUpdateStatusFinished > 0) {
+            var array = listIdUpdateFinished.toArray(Long[]::new);
+            var allEntityWithId = eventRepository.findAllEntityWithId(array);
+            eventRepository.changeEventStatus(EventStatus.FINISHED, array);
+            allEntityWithId.forEach(
+                    eventEntity -> {
+                        var eventChangeKafkaMessage = kafkaEventSentService.createEventChangeKafkaMessage(eventEntity, EventStatus.STARTED, EventStatus.FINISHED);
+                        kafkaEventSentService.kafkaSendMessage(eventChangeKafkaMessage);
+                    });
+            log.info("{} events have their status changed to {}", sizeForUpdateStatusFinished, EventStatus.FINISHED);
 
-        var countEventsChangedToStartedStatus = eventRepository.checkingAndUpdatingTheStatusOfStartedEvents(EventStatus.WAIT_START, EventStatus.STARTED);
-        log.info("{} events have their status changed to {}", countEventsChangedToStartedStatus, EventStatus.STARTED);
-        var countEventsChangedToFinishedStatus = eventRepository.checkingAndUpdatingTheStatusOfFinishedEvents(EventStatus.STARTED.toString(), EventStatus.FINISHED.toString());
-        log.info("{} events have their status changed to {}", countEventsChangedToFinishedStatus, EventStatus.FINISHED);
+        }
     }
 
     public List<Event> getMyRegistrations() {

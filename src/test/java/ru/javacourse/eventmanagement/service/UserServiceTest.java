@@ -6,6 +6,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestConstructor;
 import ru.javacourse.eventmanagement.domain.event.Event;
 import ru.javacourse.eventmanagement.domain.event.EventStatus;
+import ru.javacourse.eventmanagement.domain.service.EventService;
+import ru.javacourse.eventmanagement.domain.service.UserService;
 import ru.javacourse.eventmanagement.web.controllers.UserController;
 import ru.javacourse.eventmanagement.web.dto.event.EventDto;
 import ru.javacourse.eventmanagement.web.dto.event.EventCreateRequestDto;

@@ -1,4 +1,4 @@
-package ru.javacourse.eventmanagement.service.security;
+package ru.javacourse.eventmanagement.domain.service.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import ru.javacourse.eventmanagement.service.properties.JwtProperties;
+import ru.javacourse.eventmanagement.domain.service.security.properties.JwtProperties;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;

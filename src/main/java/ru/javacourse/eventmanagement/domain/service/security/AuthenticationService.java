@@ -1,4 +1,4 @@
-package ru.javacourse.eventmanagement.service.security;
+package ru.javacourse.eventmanagement.domain.service.security;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -9,8 +9,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.javacourse.eventmanagement.domain.users.User;
-import ru.javacourse.eventmanagement.service.UserService;
+import ru.javacourse.eventmanagement.domain.service.UserService;
 import ru.javacourse.eventmanagement.web.dto.auth.JwtResponse;
 import ru.javacourse.eventmanagement.web.dto.auth.UserCredentials;
 import ru.javacourse.eventmanagement.web.security.UserDetailsImpl;

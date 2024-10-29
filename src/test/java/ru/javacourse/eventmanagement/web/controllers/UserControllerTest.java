@@ -16,7 +16,7 @@ import ru.javacourse.eventmanagement.domain.mapper.UserRegistrationMapper;
 import ru.javacourse.eventmanagement.domain.users.Role;
 import ru.javacourse.eventmanagement.domain.users.User;
 import ru.javacourse.eventmanagement.domain.mapper.UserMapper;
-import ru.javacourse.eventmanagement.service.UserService;
+import ru.javacourse.eventmanagement.domain.service.UserService;
 import ru.javacourse.eventmanagement.web.dto.auth.UserRegistration;
 import ru.javacourse.eventmanagement.web.dto.users.UserDto;
 

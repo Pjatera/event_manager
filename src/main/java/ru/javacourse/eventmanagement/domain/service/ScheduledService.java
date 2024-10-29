@@ -1,6 +1,7 @@
-package ru.javacourse.eventmanagement.service;
+package ru.javacourse.eventmanagement.domain.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +12,7 @@ public class ScheduledService {
 
 
     @Scheduled(cron = "${event.status.cron}")
+    @Async
     public void performTaskWithUpdateEventStatus() {
         eventService.performTaskWithUpdateEventStatus();
     }

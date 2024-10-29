@@ -16,9 +16,9 @@ import ru.javacourse.eventmanagement.domain.event.Event;
 import ru.javacourse.eventmanagement.domain.event.EventStatus;
 import ru.javacourse.eventmanagement.domain.locations.Location;
 import ru.javacourse.eventmanagement.domain.mapper.EventMapper;
-import ru.javacourse.eventmanagement.service.EventService;
-import ru.javacourse.eventmanagement.service.LocationService;
-import ru.javacourse.eventmanagement.service.UserService;
+import ru.javacourse.eventmanagement.domain.service.EventService;
+import ru.javacourse.eventmanagement.domain.service.LocationService;
+import ru.javacourse.eventmanagement.domain.service.UserService;
 import ru.javacourse.eventmanagement.web.dto.event.EventCreateRequestDto;
 import ru.javacourse.eventmanagement.web.dto.event.EventDto;
 

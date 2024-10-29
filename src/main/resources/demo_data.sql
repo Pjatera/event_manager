@@ -16,16 +16,15 @@ SELECT setval('users_id_seq', (SELECT MAX(id) FROM users));
 
 INSERT INTO events(id, name, owner_id, max_places, date, cost, duration, location_id, status)
 VALUES (1, 'Full-Stack Web Development Bootcamp', 2,
-        50,  '2024-10-13 22:07:00', 500,
+        50, '2024-10-13 22:07:00', 500,
         3, 2, 'WAIT_START'),
-       (2, 'Advanced Digital Marketing Workshop', 2, 30,  '2025-12-05 10:00:00',
+       (2, 'Advanced Digital Marketing Workshop', 2, 30, '2025-12-05 10:00:00',
         300, 180, 1, 'WAIT_START');
 
 SELECT setval('events_id_seq', (SELECT MAX(id) FROM events));
 
-
 INSERT INTO events_users (id, event_id, user_id)
-VALUES  (1, 1, 3),
+VALUES (1, 1, 3),
        (2, 2, 3);
 
-SELECT setval('events_users_id_seq',(SELECT MAX(id) FROM events_users ));
+SELECT setval('events_users_id_seq', (SELECT MAX(id) FROM events_users));

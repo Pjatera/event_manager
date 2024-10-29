@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.javacourse.eventmanagement.domain.mapper.UserMapper;
 import ru.javacourse.eventmanagement.domain.mapper.UserRegistrationMapper;
-import ru.javacourse.eventmanagement.service.UserService;
+import ru.javacourse.eventmanagement.domain.service.UserService;
 import ru.javacourse.eventmanagement.web.dto.auth.UserRegistration;
 import ru.javacourse.eventmanagement.web.dto.users.UserDto;
 

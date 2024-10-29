@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.javacourse.eventmanagement.domain.locations.Location;
 import ru.javacourse.eventmanagement.domain.mapper.LocationMapper;
-import ru.javacourse.eventmanagement.service.LocationService;
+import ru.javacourse.eventmanagement.domain.service.LocationService;
 import ru.javacourse.eventmanagement.web.dto.locations.LocationDto;
 
 import java.util.List;
