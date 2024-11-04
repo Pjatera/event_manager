@@ -11,8 +11,8 @@ import ru.javacourse.eventmanagement.db.entity.user.UserEntity;
 import ru.javacourse.eventmanagement.domain.event.EventStatus;
 import ru.javacourse.eventmanagement.domain.service.security.AuthenticationService;
 import ru.javacourse.eventmanagement.web.dto.event.EventUpdateRequestDto;
-import ru.javacourse.eventnotoficationcore.kafka.EventChangeKafkaMessage;
-import ru.javacourse.eventnotoficationcore.kafka.FieldChangeDto;
+import ru.javacourse.eventmanagement.web.kafka.EventChangeKafkaMessage;
+import ru.javacourse.eventmanagement.web.kafka.FieldChangeDto;
 
 
 import java.math.BigDecimal;

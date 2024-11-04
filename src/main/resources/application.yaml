@@ -10,7 +10,7 @@ spring:
       hibernate:
         format_sql: false
   datasource:
-    url: jdbc:postgresql://localhost:5435/postgres
+    url: jdbc:postgresql://host.docker.internal:5435/postgres
     username: postgres
     password: mysecretpassword
     driver-class-name: org.postgresql.Driver
@@ -23,12 +23,12 @@ spring:
       data-locations: classpath:demo_data.sql
 
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: host.docker.internal:9092
     producer:
       acks: all
       properties:
        delivery.timeout.ms: 40000
-       linger.ms: 0
+       linger.ms: 5
        request.timeout.ms: 10000
        max.in.flight.request.per.connection: 3
 
