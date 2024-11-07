@@ -5,22 +5,16 @@ spring:
     open-in-view: false
     hibernate:
       ddl-auto: validate
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
-        format_sql: false
+        format_sql: true
   datasource:
     url: jdbc:postgresql://host.docker.internal:5435/postgres
     username: postgres
     password: mysecretpassword
     driver-class-name: org.postgresql.Driver
 
-  sql:
-    init:
-      mode: always
-      continue-on-error: false
-      schema-locations: classpath:schema.sql
-      data-locations: classpath:demo_data.sql
 
   kafka:
     bootstrap-servers: host.docker.internal:9092
@@ -49,3 +43,11 @@ security:
 event:
   status:
     cron: 0 */1 * * * *
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
+        type.descriptor.sql: TRACE
+        query.plan: DEBUG

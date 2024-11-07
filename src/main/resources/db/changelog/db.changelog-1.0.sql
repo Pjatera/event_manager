@@ -1,3 +1,6 @@
+--liquibase formatted sql
+
+--changeset pjatera:1
 CREATE TABLE IF NOT EXISTS users
 (
     id       BIGSERIAL PRIMARY KEY,
@@ -8,7 +11,7 @@ CREATE TABLE IF NOT EXISTS users
 );
 
 
-
+--changeset pjatera:2
 CREATE TABLE IF NOT EXISTS event_locations
 (
     id          BIGSERIAL PRIMARY KEY,
@@ -17,7 +20,7 @@ CREATE TABLE IF NOT EXISTS event_locations
     capacity    INT          not null check (capacity > 4),
     description VARCHAR(255)
 );
-
+--changeset pjatera:3
 CREATE TABLE IF NOT EXISTS events
 (
     id              BIGSERIAL PRIMARY KEY,
@@ -32,7 +35,7 @@ CREATE TABLE IF NOT EXISTS events
     FOREIGN KEY (location_id) REFERENCES event_locations (id),
     FOREIGN KEY (owner_id) REFERENCES users (id)
 );
-
+--changeset pjatera:4
 CREATE TABLE IF NOT EXISTS events_users
 (
     id       BIGSERIAL PRIMARY KEY,
@@ -41,7 +44,7 @@ CREATE TABLE IF NOT EXISTS events_users
 
     CONSTRAINT unique_event_user UNIQUE (event_id , user_id)
 );
-
+--changeset pjatera:5
 TRUNCATE TABLE users,events, event_locations,events_users;
 
 
