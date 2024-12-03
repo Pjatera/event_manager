@@ -14,7 +14,9 @@ spring:
     username: postgres
     password: mysecretpassword
     driver-class-name: org.postgresql.Driver
-
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+    drop-first: true
 
   kafka:
     bootstrap-servers: host.docker.internal:9092

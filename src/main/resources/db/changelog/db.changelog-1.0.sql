@@ -35,6 +35,7 @@ CREATE TABLE IF NOT EXISTS events
     FOREIGN KEY (location_id) REFERENCES event_locations (id),
     FOREIGN KEY (owner_id) REFERENCES users (id)
 );
+
 --changeset pjatera:4
 CREATE TABLE IF NOT EXISTS events_users
 (

@@ -63,10 +63,8 @@ public class EventEntity {
     private EventStatus status;
 
     @ToString.Exclude
-    @OneToMany (mappedBy ="event", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "event", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<RegistrationEntity> eventsRegistrationEntities;
-
-
 
 
     @Override
