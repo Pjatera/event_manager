@@ -8,4 +8,4 @@ RUN mvn clean package -DskipTests
 FROM openjdk:21-jdk
 ARG JAR_FILE=/build/target/*.jar
 COPY --from=build $JAR_FILE /opt/docker-test/app.jar
-ENTRYPOINT ["java","-jar","/opt/docker-test/app.jar"]
+ENTRYPOINT ["java", "-jar" ,"/opt/docker-test/app.jar"]

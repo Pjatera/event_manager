@@ -14,7 +14,6 @@ public class UserRegistrationMapper {
     private final PasswordEncoder passwordEncoder;
 
     public User mapFromUserRegistrationToUser(@Valid UserRegistration userRegistration) {
-
         return new User(
                 null,
                 userRegistration.login(),
